@@ -1,4 +1,4 @@
-import express from "express";
+
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -29,7 +29,8 @@ export const registerUser = async (req, res) => {
             email : email,
             password : password
         })
-        // return the response tthe user back of successful creation of user object.
+        // return the response t0 the user back of successful creation of user object.
+        // should i create a token and return it to user also , or not . 
         }
     }catch(error){
         res.status(500).json({
@@ -76,7 +77,7 @@ export const logoutUser = async (req, res) => {
         const user = User.findById(userId);
         if(!user){
             return res.status(404).json({
-                message : "umessage : "just for fun"ser does not exists , invalid operation."
+                message :  "user does not exists , invalid operation."
             });
         }
 
@@ -138,7 +139,7 @@ export const changePassword = async (req, res) => {
         const {userId} = req.params;
 
         //left ---- check is the password is same as the one saved in memory
-        //left ---- then save the new pass in db after hasing and return the success response to user.
+        //left ---- then save the new pass in db after hashing and return the success response to user.
     }catch(error){
         res.status(500).json({
             message : "some error occured at server side",

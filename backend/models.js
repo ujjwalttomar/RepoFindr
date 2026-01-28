@@ -19,6 +19,13 @@ const userSchema = new mongoose.Schema({
 
 },{timestamps : true});
 
+userSchema.prehook('save', (password) => {
+    if(!isModified(this.password))return;
+    let salt = 10;
+    bcrypt.hash(password, 10);
+    // check whether this is right or not . i just coded it randomly
+})
+
 const savedRepoSchema = new mongoose.Schema({
 
     repoId : {
@@ -34,5 +41,5 @@ const savedRepoSchema = new mongoose.Schema({
     // repo languages , etc , how to fetch details of repo like its tech stack , stars and forks counts, full name of repo details.
 });
 
-export User = mongoose.model("User", userSchema);
-export SavedRepo = mongoose.model("SavedRepo", savedRepoSchema);
+export const User = mongoose.model("User", userSchema);
+export const SavedRepo = mongoose.model("SavedRepo", savedRepoSchema);

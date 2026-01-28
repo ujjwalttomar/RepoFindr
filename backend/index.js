@@ -22,11 +22,14 @@ app.get("/user/:userId/edit-profile/", isLoggedIn, editProfile);
 
 app.get("/search-repo/", isLoggedIn, searchRepos);
 app.get("/fetch-trending-repos/", fetchTrendingRepos);
-app.get("/repo/save/", isLoggedIn, saveRepo);
+app.get("/repo/save/", isLoggedIn, saveRepo); /// i have to check whether the routes are correct or not.
 app.get("/savedRepos/", isLoggedIn, fetchAllSavedRepos);
 app.get("/savedRepos/:repoId/", isLoggedIn, unsaveRepo);
 
 connectToDb();
+//  i forgot how to connect to db 
+
+// app .listen code  is still remaining
 
 
 
