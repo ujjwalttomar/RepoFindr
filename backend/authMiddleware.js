@@ -1,10 +1,31 @@
-const isLoggedIn = async (req, res, next) => {
+import User from "./model.js";
 
-    // take the user's token form url ,
-    // then decode the token and verify it , is it active
-    // is it contains the same userId , of the user whose account it is trying to access.
-    // if not return error of unauthorized access with suitable error code
-    // if yes , give it entry and pass the control to the next function/controller
+exports.authenticate= async (req, res, next) => {
+    try{
+
+        const authHeader = req.headers.authorization;
+
+        if(!authHeader){
+            return res.status(401).json({message : "no token provided"});
+        }
+
+        // take the user's token form url ,
+        const token = authHeader.split('')[1];
+        // then decode the token and verify it , is it active
+        const decoded = jwt.verify(token, prcoess.env.JWT_SECRET);
+        req.user = decoded;
+        // is it contains the same userId , of the user whose account it is trying to access.
+        next();
+        // if not return error of unauthorized access with suitable error code
+        // if yes , give it entry and pass the control to the next function/controller
+    }catch(error){
+        return res.status(401).json({message : "invalid token"});
+        }
+};
+
+exports.isOwner = async (req, res, next) => {
+    const {userId} = req.body;
+    // check whether the user requestingthe resource is the same as one owner of the resource.
+    
 }
 
-export default isLoggedIn;

@@ -1,8 +1,9 @@
 import express from "express";
 import {registerUser, loginUser, changePassword, logoutUser, editProfile} from "./authController.js";
 import {searchRepos, fetchTrendingRepos, saveRepo, fetchAllSavedRepos, unsaveRepo} from "./repoController.js";
-import {isLoggedIn} from "./authMiddleware.js";
+import {authenticate, isOwner} from "./authMiddleware.js";
 import {connectToDB} from "./db.js";
+import dotenv from "dotenv";
 
 
 
@@ -30,6 +31,8 @@ connectToDb();
 //  i forgot how to connect to db 
 
 // app .listen code  is still remaining
-
+app.listen(process.env.PORT,() => {
+    console.log(`server is running at ${process.env.PORT}`)
+});
 
 
