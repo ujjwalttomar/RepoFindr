@@ -19,11 +19,11 @@ const userSchema = new mongoose.Schema({
 
 },{timestamps : true});
 
-userSchema.prehook('save', async function(next){
+userSchema.pre('save', async function(next){
     if(!this.isModified())return next();
     
     try{
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(this.password, 10);
         this.password = hashedPassword ;
         next();
     }catch(error){
@@ -34,7 +34,7 @@ userSchema.prehook('save', async function(next){
 
 const savedRepoSchema = new mongoose.Schema({
 
-    repoId : {
+    repoUrl : {
         type : String,
         required : true
     },
@@ -42,10 +42,47 @@ const savedRepoSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    user:{
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'User'
+    name : {
+        type : String, 
+        required : true
+    },
+    fullName : {
+        type : String,
+        required : true
+    },
+    Owner : {
+        login : {
+            type : String,
+            required : true
+        },
+        id : {
+            type : String,
+            required : true
+        },
+        avatarUrl : {
+            type : String,
+            default : xyss.img //   i  have to provide a default img link as an avatar for the owners who doesnot have an avatar
+        },
+        profileUrl : {
+            type : String,
+            required : true
+        }
+    },
+    
+    savedBy : {
+        type : mongoose.Types.ObjectId,
+        ref : "User"
+    },
+    forksCount : {
+        type : Number,
+        required : true
+    },
+    stargazersCount : {
+        type : Numner ,
+        required : true
     }
+
+
     // repo owner details 
 
     // repo organisation detaila;

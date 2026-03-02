@@ -2,12 +2,23 @@ import express from "express";
 import SavedRepo from "./models";
 
 
-// searchRepos, fetchTrendingRepos, saveRepo, fetchAllSavedRepos, unsaveRepo
+// searchRepos, fetchTrendingRepos, saveRepo, fetchAllSavedRepos, unsaveRepo, fetchRepoOwnerdetails (left)
 
 export const searchRepos = async (req, res) => {
 
     try{
         // take the input form user, the queries , the order , the number of stars , forks , language etc.
+        const {keyword, language, stars, forks, order, sortBy=stars} = req.body;  // last-updated filter is still yet to be added. 
+
+        let query = [];
+
+        if(keyword)query.push(keyword);
+        if(language)query.push(`language : ${langauge}`);
+        if(stars)query.push(`stars:>=${stars}`);
+        if(forks)query.push(`forks: >= ${forks}`);
+        if(order)query.push(`order: >= ${order}`);
+        if(sortBy)query.push(`sort: >= ${sort}`);
+        
         // usign then to make a api call ,
         // after fetchign the results , use that data to create a more predictive respose with less unpredictive response and errors.
         // return the results of fetch using pagination .
