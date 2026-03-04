@@ -1,4 +1,4 @@
-import User from "./model.js";
+
 
 exports.authenticate= async (req, res, next) => {
     try{
@@ -24,7 +24,37 @@ exports.authenticate= async (req, res, next) => {
 };
 
 exports.isOwner = async (req, res, next) => {
-    const {userId} = req.body;
+
+    try{
+    const {userId} = req.params.user._id;
+    const repoId = req.body;
+
+    const repo = await SavedRepos.findById(repoId);
+
+    if(!repo){
+        return res.status(404).json({
+            message : "repo not found, invalid request",
+            error
+        })
+    }
+
+    const ownerId = repo.savedBy;
+
+    if(userId != ownerId){
+        return res.status(401).json({
+            message : "unauthorized request",
+            error
+        })
+    }
+
+    next();
+    }
+    catch(error){
+        return res.status(500).json({
+            message : "server side error",
+            error 
+        })
+    }
     // check whether the user requestingthe resource is the same as one owner of the resource.
     
 }

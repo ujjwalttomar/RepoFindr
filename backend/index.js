@@ -6,33 +6,45 @@ import {connectToDB} from "./db.js";
 import dotenv from "dotenv";
 
 
+dotenv.config();
 
 
+const app = express();
+app.use(express.json());
 
-const app = express.app();
+
 //  auth routes
 
-app.post("/register/", registerUser);
-app.get("/login/", loginUser);
-app.get("/user/:userId/change-password/", isLoggedIn, changePassword);
-app.get("/user/:userId/logout/", isLoggedIn, logoutUser);
-app.get("/user/:userId/edit-profile/", isLoggedIn, editProfile);
+app.post("/register", registerUser);
+app.post("/login", loginUser);
+app.post("/user/:userId/change-password", authenticate, changePassword);
+app.post("/user/:userId/logout", authenticate, logoutUser);
+app.put("/user/:userId/edit-profile", authenticate, editProfile);
 
 
 // repo routes
 
-app.get("/search-repo/", isLoggedIn, searchRepos);
-app.get("/fetch-trending-repos/", fetchTrendingRepos);
-app.get("/repo/save/", isLoggedIn, saveRepo); /// i have to check whether the routes are correct or not.
-app.get("/savedRepos/", isLoggedIn, fetchAllSavedRepos);
-app.get("/savedRepos/:repoId/", isLoggedIn, unsaveRepo);
+app.get("/search-repo", authenticate, searchRepos);
+app.get("/fetch-trending-repos", fetchTrendingRepos);
+app.post("/repo/:repoId/save", authenticate, saveRepo); /// i have to check whether the routes are correct or not.
+app.get("/savedRepos", authenticate, isOwner, fetchAllSavedRepos);
+app.delete("/savedRepos/:repoId", authenticate, isOwner, unsaveRepo);
 
-connectToDb();
+connectToDB()
+    .then(() => {
+        console.log("Database connected");
+    })
+    .catch(error => {
+        console.error("Database connection failed:", error);
+    });
 //  i forgot how to connect to db 
+
+
+const PORT = process.env.PORT || 3000;
 
 // app .listen code  is still remaining
 app.listen(process.env.PORT,() => {
-    console.log(`server is running at ${process.env.PORT}`)
+    console.log(`server is running at https://localhost:${PORT}`)
 });
 
 
