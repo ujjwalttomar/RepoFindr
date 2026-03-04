@@ -38,11 +38,8 @@ const savedRepoSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    githubLink : {
-        type : String,
-        required : true
-    },
-    name : {
+  
+    repoName : {
         type : String, 
         required : true
     },
@@ -50,15 +47,15 @@ const savedRepoSchema = new mongoose.Schema({
         type : String,
         required : true
     },
+    description : {
+        type : String
+    },
     Owner : {
-        login : {
+        username : {
             type : String,
             required : true
         },
-        id : {
-            type : String,
-            required : true
-        },
+       
         avatarUrl : {
             type : String,
             default : xyss.img //   i  have to provide a default img link as an avatar for the owners who doesnot have an avatar
