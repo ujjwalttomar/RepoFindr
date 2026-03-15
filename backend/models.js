@@ -1,4 +1,8 @@
+//                                                    backend/model.js
+
+
 import mongoose from "mongoose";
+import  bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
 
@@ -20,7 +24,7 @@ const userSchema = new mongoose.Schema({
 },{timestamps : true});
 
 userSchema.pre('save', async function(next){
-    if(!this.isModified())return next();
+    if(!this.isModified('password'))return next();
     
     try{
         const hashedPassword = await bcrypt.hash(this.password, 10);
@@ -33,7 +37,10 @@ userSchema.pre('save', async function(next){
 });
 
 const savedRepoSchema = new mongoose.Schema({
-
+    RepoID : {
+        type:String,
+        required : true
+    },
     repoUrl : {
         type : String,
         required : true
@@ -58,7 +65,7 @@ const savedRepoSchema = new mongoose.Schema({
        
         avatarUrl : {
             type : String,
-            default : xyss.img //   i  have to provide a default img link as an avatar for the owners who doesnot have an avatar
+            default : "xyss.img"//   i  have to provide a default img link as an avatar for the owners who doesnot have an avatar
         },
         profileUrl : {
             type : String,
@@ -67,7 +74,7 @@ const savedRepoSchema = new mongoose.Schema({
     },
     
     savedBy : {
-        type : mongoose.Types.ObjectId,
+        type : mongoose.Schema.Types.ObjectId,
         ref : "User"
     },
     forksCount : {
@@ -75,7 +82,7 @@ const savedRepoSchema = new mongoose.Schema({
         required : true
     },
     stargazersCount : {
-        type : Numner ,
+        type : Number ,
         required : true
     }
 

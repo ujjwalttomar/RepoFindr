@@ -1,8 +1,11 @@
+//                                                           backend/index.js
+
+
 import express from "express";
 import {registerUser, loginUser, changePassword, logoutUser, editProfile} from "./authController.js";
 import {searchRepos, fetchTrendingRepos, saveRepo, fetchAllSavedRepos, unsaveRepo} from "./repoController.js";
 import {authenticate, isOwner} from "./authMiddleware.js";
-import {connectToDB} from "./db.js";
+import connectToDB from "./db.js";
 import dotenv from "dotenv";
 
 
@@ -30,21 +33,26 @@ app.post("/repo/:repoId/save", authenticate, saveRepo); /// i have to check whet
 app.get("/savedRepos", authenticate, isOwner, fetchAllSavedRepos);
 app.delete("/savedRepos/:repoId", authenticate, isOwner, unsaveRepo);
 
-connectToDB()
-    .then(() => {
-        console.log("Database connected");
-    })
-    .catch(error => {
-        console.error("Database connection failed:", error);
-    });
-//  i forgot how to connect to db 
-
-
 const PORT = process.env.PORT || 3000;
 
-// app .listen code  is still remaining
-app.listen(process.env.PORT,() => {
-    console.log(`server is running at https://localhost:${PORT}`)
+connectToDB()
+   
+    .then(()=>{
+        console.log("Database connected");
+         // app .listen code  is still remaining
+        app.listen(PORT,() => {
+            console.log(`server is running at https://localhost:${PORT}`)
+        });
+        }       
+    )
+    .catch(error => {
+        console.error("Database connection failed:", error);
 });
+
+
+
+
+
+
 
 

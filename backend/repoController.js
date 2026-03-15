@@ -1,6 +1,8 @@
+//                                                    backend/repoController.js
 
-import SavedRepo from "./models";
 
+import {SavedRepo, User} from "./models.js";
+import axios from "axios";
 
 // searchRepos, fetchTrendingRepos, saveRepo, fetchAllSavedRepos, unsaveRepo, fetchRepoOwnerdetails (left  -- or i think i will not need it , i can just put the url in its avatar, and by clicking  it user's github profile will showup).
 
@@ -26,7 +28,7 @@ export const searchRepos = async (req, res) => {
         
         const repos = response.data.items;
 
-        const totalCount = response.data.total_counts;
+        const totalCount = response.data.total_count;
 
         return res.status(200).json({
             total:totalCount,
@@ -63,8 +65,8 @@ export const searchRepos = async (req, res) => {
 export const fetchAllSavedRepos = async (req, res) => {
 
     try{
-
-        const fetchedRepos = await SavedRepo.find({});
+        const userId = req.user._id;
+        const fetchedRepos = await SavedRepo.find({savedBy:userId});
 
         if(fetchedRepos.length == 0){
             return res.status(404).json({
@@ -93,10 +95,50 @@ export const fetchAllSavedRepos = async (req, res) => {
 export const fetchTrendingRepos = async (req, res) => {
 
     try{
+        const date = new Date();
+        date.setDate(date.getDate()-7);
+        const dateString = date.toISOString().split('T')[0];
+
+        let query = "";
+        query += `pushed:>${dateString}`;
+        
+
+        const response = await axios.get(`https://api.github.com/search/repositories/`,{
+            params : {
+                q : query,
+                sort : "stars",
+                order : "desc"
+        }
+            
+        })
+        const repos = response.data.items;
+        const totalCount = response.data.total_count;
+
+        return res.status(200).json({
+            total:totalCount,
+            count:repos.length,
+            repositories:repos.map(repo => ({
+                id : repo.id,
+                repoName : repo.name,
+                fullName : repo.full_name,
+                url : repo.html_url,
+                stars:repo.stargazers_count,
+                forks:repo.forks_count,
+                language: repo.language,
+                owner : {
+                    username : repo.owner.login,
+                    avatar : repo.owner.avatar_url,
+                    profileUrl: repo.owner.html_url
+                }
+
+            }))
+
+        });
+
         // to fetch trending repos , we will fetch repos created in last 7 days with their starts or forks in ascending order.
         // display the result, i have to clear the api resutl for reducing the error of umpreidictive behaviour of api and predictive errors.
         // return the resutls of api as response.
-
+        // still looking for some ideas , how can i get trending repos , what should be our bases . also how to sort thigns.
     }catch(error){
         return res.status(500).json({
             message : "server side error",
@@ -108,37 +150,49 @@ export const fetchTrendingRepos = async (req, res) => {
 export const saveRepo = async (req, res) => {
 
     try{
-        const {repoName, fullname, url, stars, forks, language, description, owner: {username, pofileUrl, avatar}} = req.body;
+        const {id, repoName, fullname, url, stars, forks, language, description, Owner: {username, profileUrl, avatar}} = req.body;
         
-        const userId = req.params.userId;
+        const userId = req.user._id;
 
-        const user = await User.findById({userId});
+        const user = await User.findById(userId);
         if(!user){
             return res.status(400).json({
                 message : "invalid request",
                 error
             })
         }
+        const alreadySaved = await SavedRepo.findOne({RepoID:id});
+        if(alreadySaved){
+            return res.status(400).json({
+                message : "repo is alreadysaved "
+            })
+        }
+        const newRepo = await SavedRepo.create({
+            RepoID : id,
+            repoName : repoName,
+            fullName : fullname,
+            repoUrl : url,
+            stargazersCount : stars,
+            forksCount :forks,
+            language : language,
+            Owner : {
+                username : username,
+                profileUrl : profileUrl,
+                avatarUrl : avatar,
+            },
+            description : description,
+            savedBy : user
+        });
         
-        const newRepo = await SavedRepo.create();
-
-        newRepo.repoName = repoName;
-        newRepo.fullName = fullname;
-        newRepo.url = url;
-        newRepo.stargazersCount = stars;
-        newRepo.forksCount = forks;
-        newRepo.language = language;
-        newRepo.owner.username = owner.username;
-        newRepo.owner.profileUrl = owner.profileUrl;
-        newRepo.owner.avatarUrl = owner.avatar;
-        newRepo.description = description;
-        newRepo.savedBy = user
         // take the details of repo from the req body
         // check if the same repo exists in the db or not ,
         // if not than save this repo in db with req fiels and info about it .
         // save the db
         // reuturn the newly created repo obj as response .
-
+        return res.status(200).json({
+            message : "repo saved successfully",
+            newRepo
+        })
     }catch(error){
         return res.status(500).json({
             message : "server side error",
@@ -152,7 +206,7 @@ export const unsaveRepo = async (req, res) => {
     try{
         const repoId = req.params.repoId;
 
-        const repo = SavedRepo.find({repoId});
+        const repo = await SavedRepo.findById(repoId);
 
         if(!repo){
             return res.status(404).json({
@@ -161,7 +215,7 @@ export const unsaveRepo = async (req, res) => {
             })
         }
 
-        await repo.delete();
+        await repo.deleteOne();
 
         return res.status(200).json({
             message : "repo deleted successfull"

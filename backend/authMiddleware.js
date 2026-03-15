@@ -1,6 +1,9 @@
+//                                      backend/authMiddleware.js
 
+import jwt from "jsonwebtoken";
+import {SavedRepo} from "./models.js";
 
-exports.authenticate= async (req, res, next) => {
+export const authenticate = async (req, res, next) => {
     try{
 
         const authHeader = req.headers.authorization;
@@ -10,9 +13,9 @@ exports.authenticate= async (req, res, next) => {
         }
 
         // take the user's token form url ,
-        const token = authHeader.split('')[1];
+        const token = authHeader.split(' ')[1];
         // then decode the token and verify it , is it active
-        const decoded = jwt.verify(token, prcoess.env.JWT_SECRET);
+        const decoded =  jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         // is it contains the same userId , of the user whose account it is trying to access.
         next();
@@ -23,13 +26,13 @@ exports.authenticate= async (req, res, next) => {
         }
 };
 
-exports.isOwner = async (req, res, next) => {
+export const isOwner = async (req, res, next) => {
 
     try{
-    const {userId} = req.params.user._id;
-    const repoId = req.body;
+    const userId = req.user.userId;
+    const repoId = req.params.repoId;
 
-    const repo = await SavedRepos.findById(repoId);
+    const repo = await SavedRepo.findById(repoId);
 
     if(!repo){
         return res.status(404).json({
@@ -40,7 +43,7 @@ exports.isOwner = async (req, res, next) => {
 
     const ownerId = repo.savedBy;
 
-    if(userId != ownerId){
+    if(userId.toString() != ownerId.toString()){
         return res.status(401).json({
             message : "unauthorized request",
             error
