@@ -7,6 +7,7 @@ import {searchRepos, fetchTrendingRepos, saveRepo, fetchAllSavedRepos, unsaveRep
 import {authenticate, isOwner} from "./authMiddleware.js";
 import connectToDB from "./db.js";
 import dotenv from "dotenv";
+import cors from "cors";
 
 
 dotenv.config();
@@ -14,6 +15,12 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+
+
+app.use(cors({
+    origin : "http://localhost:5173",
+    credentials : true
+}))
 
 
 //  auth routes

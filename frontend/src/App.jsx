@@ -1,14 +1,21 @@
 import {Routes, Route}  from "react-router-dom";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import SavedRepos from "./pages/SavedRepos.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
+import Navbar from "./components/Navbar.jsx";
 
 function App(){
     return(
-        
+       <>
+       
+        <Navbar/>
         <Routes>
-            <Route path="/"  element={<h1>Search page</h1>}/>
-            <Route path="/saved"  element={<h1>saved repos</h1>}/>
-            <Route path="/register"  element={<h1>register page</h1>}/>
-            <Route path="/login"  element={<h1>login page</h1>}/>
-        </Routes>
+            <Route path="/"  element={<SearchPage/>}/>
+            <Route path="/saved"  element={<SavedRepos/>}/>
+            <Route path="/register"  element={<RegisterPage/>}/>
+            <Route path="/login"  element={<LoginPage/>}/>
+        </Routes></>
     )
 }
 
