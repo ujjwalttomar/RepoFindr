@@ -24,12 +24,12 @@ const userSchema = new mongoose.Schema({
 },{timestamps : true});
 
 userSchema.pre('save', async function(next){
-    if(!this.isModified('password'))return next();
+    if(!this.isModified('password'))return ;
     
     try{
         const hashedPassword = await bcrypt.hash(this.password, 10);
         this.password = hashedPassword ;
-        next();
+        
     }catch(error){
         next(error);
     }

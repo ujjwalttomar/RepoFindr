@@ -48,7 +48,7 @@ connectToDB()
         console.log("Database connected");
          // app .listen code  is still remaining
         app.listen(PORT,() => {
-            console.log(`server is running at https://localhost:${PORT}`)
+            console.log(`server is running at http://localhost:${PORT}`)
         });
         }       
     )

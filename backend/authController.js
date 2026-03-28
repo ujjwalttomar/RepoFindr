@@ -13,7 +13,7 @@ export const registerUser = async (req, res) => {
         const {username, email, password} = req.body;
 
         if(!username || !email || !password){
-            return res.status(401).json({
+            return res.status(400).json({
                 message : "enter required fields."
             });
         }
@@ -34,12 +34,12 @@ export const registerUser = async (req, res) => {
         })
         // return the response t0 the user back of successful creation of user object.
         return res.status(200).json({ message : "user created successfully !"});
-        // should i create a token and return it to user also , or not . --- it is not good practice to give token before email verification.
         
     }catch(error){
+        console.error(error);
         res.status(500).json({
             message : "some error occured at server side",
-            error
+            error:error.message
         });
     }
 };
@@ -47,16 +47,16 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
 
     try{
-        const {email, username, password} = req.body;
+        const {identifier, password} = req.body;
 
-        if(!email && !username){
-            return res.status(400).json({ message: "email or username required" });
+        if(!identifier){
+            return res.status(400).json({ message: "user creadentials are required" });
         }
         if(!password){
             return res.status(400).json({ message: "password required" });
         }
         const user = await User.findOne({
-            $or : [{email : email}, {username : username}]  // left ------- check both  email, username in db.
+            $or : [{email : identifier}, {username : identifier}]  // left ------- check both  email, username in db.
         });
           
 
