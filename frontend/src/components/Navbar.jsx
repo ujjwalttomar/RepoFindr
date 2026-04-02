@@ -1,3 +1,5 @@
+//                RepoFindr/frontend/src/components/Navbar.jsx
+
 
 import {Link} from "react-router-dom";
 import {useContext} from "react";
@@ -17,7 +19,7 @@ function Navbar (){
 
            { (token)?
                ( <div style={{display : "flex", gap:"10px"}}>
-                    <p><h2>Welcome...</h2></p>
+                    <h2>Welcome...</h2>
                     <button style={{padding : "0px 16px ", fontWeight : "bold"}}onClick={logout}>Logout</button>
                 </div>
             )
