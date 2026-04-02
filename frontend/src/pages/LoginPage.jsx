@@ -1,3 +1,5 @@
+//          RepoFindr/frontend/src/pages/LoginPage.jsx
+
 
 import React, {useState, useContext} from "react";
 import {useNavigate} from "react-router-dom";
@@ -8,6 +10,7 @@ import { AuthContext } from "../context/AuthContext";
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const {login} = useContext(AuthContext);
+    
 
     async function handleSubmit(){
         
@@ -25,7 +28,7 @@ import { AuthContext } from "../context/AuthContext";
 
             navigate("/");
         }else{
-            console.log("Login failed:",data.message);
+            console.log("Login failed : ",data.message);
         }
         
     }

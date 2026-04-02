@@ -1,3 +1,6 @@
+//          RepoFindr/frontend/src/pages/RegisterPage.jsx
+
+
 import React, { useState } from "react";
 import {useNavigate} from "react-router-dom";
 
@@ -27,13 +30,14 @@ function RegisterPage (){
             navigate("/login");
         }
         else{
-            console.log("Register failer:", data.message);
+            console.log("Register failer : ", data.message);
         }
         
     }
 
     return (
         <>
+        
         <input placeholder="email" type="email" name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}}></input>
         <input placeholder="username" type="text" name="username" value={username} onChange={(e)=>{setUsername(e.target.value)}}></input>
         <input placeholder="password" type="password" name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}></input>

@@ -51,8 +51,7 @@ const savedRepoSchema = new mongoose.Schema({
         required : true
     },
     fullName : {
-        type : String,
-        required : true
+        type : String
     },
     description : {
         type : String
@@ -72,6 +71,14 @@ const savedRepoSchema = new mongoose.Schema({
             required : true
         }
     },
+    updatedAt:{
+        type : Date,
+        required : true
+    },
+    pushedAt : {
+        type : Date,
+        required : true
+    },
     
     savedBy : {
         type : mongoose.Schema.Types.ObjectId,
@@ -87,13 +94,7 @@ const savedRepoSchema = new mongoose.Schema({
     }
 
 
-    // repo owner details 
-
-    // repo organisation detaila;
-
-    // repo topic details
-
-    // repo languages , etc , how to fetch details of repo like its tech stack , stars and forks counts, full name of repo details.
+   
 },{timestamps : true});
 
 export const User = mongoose.model("User", userSchema);

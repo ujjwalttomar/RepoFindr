@@ -36,7 +36,7 @@ app.put("/user/:userId/edit-profile", authenticate, editProfile);
 
 app.get("/search-repo", authenticate, searchRepos);
 app.get("/fetch-trending-repos", fetchTrendingRepos);
-app.post("/repo/:repoId/save", authenticate, saveRepo); /// i have to check whether the routes are correct or not.
+app.post("/repo/save", authenticate, saveRepo); /// i have to check whether the routes are correct or not.
 app.get("/savedRepos", authenticate, isOwner, fetchAllSavedRepos);
 app.delete("/savedRepos/:repoId", authenticate, isOwner, unsaveRepo);
 

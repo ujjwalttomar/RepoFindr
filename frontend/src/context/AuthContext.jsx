@@ -1,3 +1,6 @@
+//              RepoFindr/frontend/src/context/AuthContext.jsx
+
+
 import {useState, createContext} from "react";
 
 export const AuthContext = createContext();
@@ -13,6 +16,7 @@ export function AuthProvider({children}){
         localStorage.removeItem("token");
         setToken(null);
     }
+    
     return(
         <AuthContext.Provider value={{token, login, logout}}>
             {children}

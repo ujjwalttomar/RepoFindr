@@ -41,6 +41,9 @@ export const searchRepos = async (req, res) => {
                 stars:repo.stargazers_count,
                 forks:repo.forks_count,
                 language: repo.language,
+                description:repo.description,
+                pushedAt : repo.pushed_at,
+                updatedAt: repo.updated_at,
                 owner : {
                     username : repo.owner.login,
                     avatar : repo.owner.avatar_url,
@@ -150,15 +153,14 @@ export const fetchTrendingRepos = async (req, res) => {
 export const saveRepo = async (req, res) => {
 
     try{
-        const {id, repoName, fullname, url, stars, forks, language, description, Owner: {username, profileUrl, avatar}} = req.body;
+        const {id, repoName, fullname, url, stars, forks, language, description, owner: {username, profileUrl, avatar},updatedAt, pushedAt} = req.body;
         
-        const userId = req.user._id;
+        const userID = req.user.userId;
 
-        const user = await User.findById(userId);
+        const user = await User.findById(userID);
         if(!user){
             return res.status(400).json({
-                message : "invalid request",
-                error
+                message : "invalid request"
             })
         }
         const alreadySaved = await SavedRepo.findOne({RepoID:id});
@@ -181,19 +183,18 @@ export const saveRepo = async (req, res) => {
                 avatarUrl : avatar,
             },
             description : description,
-            savedBy : user
+            savedBy : user,
+            pushedAt : pushedAt,
+            updatedAt : updatedAt
         });
         
-        // take the details of repo from the req body
-        // check if the same repo exists in the db or not ,
-        // if not than save this repo in db with req fiels and info about it .
-        // save the db
-        // reuturn the newly created repo obj as response .
+     
         return res.status(200).json({
             message : "repo saved successfully",
             newRepo
         })
     }catch(error){
+        console.error("save repo error : ", error);
         return res.status(500).json({
             message : "server side error",
             error
