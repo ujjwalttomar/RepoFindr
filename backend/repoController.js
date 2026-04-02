@@ -68,13 +68,13 @@ export const searchRepos = async (req, res) => {
 export const fetchAllSavedRepos = async (req, res) => {
 
     try{
-        const userId = req.user._id;
-        const fetchedRepos = await SavedRepo.find({savedBy:userId});
+        console.log("fetchAllSavedRepos hit, user:", req.user)
+        const userID = req.user.userId;
+        const fetchedRepos = await SavedRepo.find({savedBy:userID});
 
         if(fetchedRepos.length == 0){
-            return res.status(404).json({
-                message : "no saved repos were found",
-                error 
+            return res.status(200).json({
+                message : "no saved repos were found"
             })
         }
 
@@ -83,11 +83,8 @@ export const fetchAllSavedRepos = async (req, res) => {
             fetchedRepos
         })
    
-        // fetch all the repos from db usign the dates they were created.
-        // providing the option to sort the saved repos using stars , last updated and forks order too.
-        // using pagination to display result
-        // return the response , i m a bit confused about this lets see what happens
     }catch(error){
+        console.log("server error :",error.message);
         return res.status(500).json({
             message : "server side error",
             error : error.response.data?.message || error.message
@@ -163,10 +160,11 @@ export const saveRepo = async (req, res) => {
                 message : "invalid request"
             })
         }
-        const alreadySaved = await SavedRepo.findOne({RepoID:id});
+        const alreadySaved = await SavedRepo.findOne({RepoID:id, savedBy:userID});
         if(alreadySaved){
             return res.status(400).json({
-                message : "repo is alreadysaved "
+                message : "repo is alreadysaved",  // i m using this message to change the save button to unsave  button for already saved repos.
+                savedDocId: alreadySaved._id 
             })
         }
         const newRepo = await SavedRepo.create({
@@ -211,15 +209,14 @@ export const unsaveRepo = async (req, res) => {
 
         if(!repo){
             return res.status(404).json({
-                message : "repo not found , invalid request",
-                error
+                message : "repo not found , invalid request"
             })
         }
 
         await repo.deleteOne();
 
         return res.status(200).json({
-            message : "repo deleted successfull"
+            message : "repo deleted successfully"
         })
         // take the repo if or somethign to identify the repo in db , and find if it exists. 
         // if not return suitable error , and if it exists , then unsave it , delete it from the db.

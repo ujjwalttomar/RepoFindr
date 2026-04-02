@@ -37,7 +37,7 @@ app.put("/user/:userId/edit-profile", authenticate, editProfile);
 app.get("/search-repo", authenticate, searchRepos);
 app.get("/fetch-trending-repos", fetchTrendingRepos);
 app.post("/repo/save", authenticate, saveRepo); /// i have to check whether the routes are correct or not.
-app.get("/savedRepos", authenticate, isOwner, fetchAllSavedRepos);
+app.get("/savedRepos", authenticate, fetchAllSavedRepos);
 app.delete("/savedRepos/:repoId", authenticate, isOwner, unsaveRepo);
 
 const PORT = process.env.PORT || 3000;

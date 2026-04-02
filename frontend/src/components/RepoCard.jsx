@@ -1,12 +1,15 @@
 //            RepoFindr/frontend/src/components/RepoCard.jsx
 
 
-import {useContext} from "react";
-import {AuthContext} from "../context/AuthContext";
+import {useState, useContext} from "react"
+import {AuthContext} from "../context/AuthContext"
 
-function RepoCard ({repo}){
 
+function RepoCard ({repo, onSave, onUnsave, isSaved, savedDocId: propSavedDocId}) {
+    
+    const [localSavedDocId, setLocalSavedDocId] = useState(null);
     const {token} = useContext(AuthContext);
+    const actualDocId = localSavedDocId || propSavedDocId;
 
     async function HandleSave (){
         
@@ -37,11 +40,32 @@ function RepoCard ({repo}){
 
         const data = await response.json();
         if(response.ok){
-            console.log("repo saved");
-        }else{
+            setLocalSavedDocId(data.newRepo._id) 
+            await onSave(repo.id.toString());
+        }else if(data.message === "repo is alreadysaved"){
+            setLocalSavedDocId(data.savedDocId) 
+            onSave(repo.id.toString())
+        }
+        else{
             console.log("something went wrong : ", data.message);
         }
 
+    }
+    async function HandleUnsave (){
+        
+        const response = await fetch(`http://localhost:5000/savedRepos/${actualDocId}`,{
+            method : "DELETE",
+            headers : {
+                "authorization" : `Bearer ${token}`
+            }
+        })
+        const data = await response.json();
+
+        if(response.ok){
+            await onUnsave(repo.id.toString());
+        }else{
+            console.log("something went wrong : ", data.message);
+        }
     }
 
     return (
@@ -52,7 +76,10 @@ function RepoCard ({repo}){
                 <span>{repo.owner.username}</span>
             </div>
 
-            <button onClick={HandleSave}>SAVE</button>
+            {isSaved ? 
+            (<button onClick={HandleUnsave}>UNSAVE</button>)
+            :(<button onClick={HandleSave}>SAVE</button>)
+            }
         </div>
 
         <h1><a href={repo.url}>{repo.repoName}</a></h1>

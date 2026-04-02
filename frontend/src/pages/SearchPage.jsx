@@ -1,7 +1,7 @@
 //          RepoFindr/frontend/src/pages/SearchPage.jsx
 
 
-import react, {useState, useContext} from "react";
+import react, {useState, useContext, useEffect} from "react";
 import RepoCard from "../components/RepoCard.jsx";
 import {AuthContext} from "../context/AuthContext.jsx";
 
@@ -14,7 +14,36 @@ function SearchPage (){
     const [lastUpdated, setLastUpdated] = useState("");
     const [loading, setLoading] = useState(false);
     const [repos, setRepos]= useState([]);
-    const { token } = useContext(AuthContext)
+    const { token } = useContext(AuthContext);
+    const [savedIds, setSavedIds] = useState([]);
+    const [savedDocIds, setSavedDocIds] = useState({});
+    
+    useEffect(()=>{
+        async function fetchSaved(){
+            const reponse = await fetch("http://localhost:5000/savedRepos",{
+                method : 'GET',
+                headers : {"authorization" : `Bearer ${token}`}
+            })
+            const data = await reponse.json();
+            const ids = data.fetchedRepos ? data.fetchedRepos.map(repo => repo.RepoID) : [];
+            const docIds = {};
+            if(data.fetchedRepos) {
+                data.fetchedRepos.forEach(repo => { docIds[repo.RepoID] = repo._id })
+            }
+            setSavedIds(ids);
+            setSavedDocIds(docIds);
+        }
+        fetchSaved()
+    },[]);
+
+    function addToSaved (id){
+        setSavedIds((prev)=>[...prev, id])
+       
+   }
+    function removeFromSaved (id){
+        setSavedIds((prev)=>prev.filter(SavedId => SavedId != id));
+        
+    }
 
     async function handleSearch(){
         
@@ -35,8 +64,6 @@ function SearchPage (){
         }
         
         setRepos(data.repositories)
-
-
     }
 
     return (
@@ -54,7 +81,13 @@ function SearchPage (){
         </div>
 
         <div>
-            {loading ? "Loading...." : (repos.map((repo)=><div key={repo.id}><RepoCard repo={repo}/></div>))}
+            {loading ? "Loading...." : (repos.map((repo)=><div key={repo.id}><RepoCard 
+                repo={repo}
+                isSaved={savedIds.includes(repo.id.toString())}
+                savedDocId={savedDocIds[repo.id.toString()]}
+                onSave={addToSaved}
+                onUnsave={removeFromSaved}
+                /></div>))}
         </div>
        </>
     )
