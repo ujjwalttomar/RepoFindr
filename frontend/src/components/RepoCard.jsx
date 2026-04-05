@@ -1,15 +1,13 @@
 //            RepoFindr/frontend/src/components/RepoCard.jsx
 
 
-import {useState, useContext} from "react"
+import {useContext} from "react"
 import {AuthContext} from "../context/AuthContext"
 
 
-function RepoCard ({repo, onSave, onUnsave, isSaved, savedDocId: propSavedDocId}) {
+function RepoCard ({repo, onSave, onUnsave, isSaved}) {
     
-    const [localSavedDocId, setLocalSavedDocId] = useState(null);
     const {token} = useContext(AuthContext);
-    const actualDocId = localSavedDocId || propSavedDocId;
 
     async function HandleSave (){
         
@@ -19,7 +17,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved, savedDocId: propSavedDocId}
                 "content-type" : "application/json",
                 "authorization" : `Bearer ${token}`
             },
-            body : JSON.stringify( {
+            body : JSON.stringify({
                 id : repo.id,
                 repoName : repo.repoName,
                 fullname : repo.fullname,
@@ -39,21 +37,16 @@ function RepoCard ({repo, onSave, onUnsave, isSaved, savedDocId: propSavedDocId}
         })
 
         const data = await response.json();
-        if(response.ok){
-            setLocalSavedDocId(data.newRepo._id) 
+        
+        if(response.ok || data.message === "repo is alreadysaved"){
             await onSave(repo.id.toString());
-        }else if(data.message === "repo is alreadysaved"){
-            setLocalSavedDocId(data.savedDocId) 
-            onSave(repo.id.toString())
-        }
-        else{
+        } else {
             console.log("something went wrong : ", data.message);
         }
-
     }
     async function HandleUnsave (){
         
-        const response = await fetch(`http://localhost:5000/savedRepos/${actualDocId}`,{
+        const response = await fetch(`http://localhost:5000/savedRepos/${repo.id}`,{
             method : "DELETE",
             headers : {
                 "authorization" : `Bearer ${token}`

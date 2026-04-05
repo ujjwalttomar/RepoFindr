@@ -16,7 +16,6 @@ function SearchPage (){
     const [repos, setRepos]= useState([]);
     const { token } = useContext(AuthContext);
     const [savedIds, setSavedIds] = useState([]);
-    const [savedDocIds, setSavedDocIds] = useState({});
     
     useEffect(()=>{
         async function fetchSaved(){
@@ -26,13 +25,8 @@ function SearchPage (){
             })
             const data = await reponse.json();
             const ids = data.fetchedRepos ? data.fetchedRepos.map(repo => repo.RepoID) : [];
-            const docIds = {};
-            if(data.fetchedRepos) {
-                data.fetchedRepos.forEach(repo => { docIds[repo.RepoID] = repo._id })
-            }
             setSavedIds(ids);
-            setSavedDocIds(docIds);
-        }
+        } 
         fetchSaved()
     },[]);
 
@@ -47,6 +41,7 @@ function SearchPage (){
 
     async function handleSearch(){
         
+        setLoading(true);
         const params= new URLSearchParams({topic, language, stars, forks, lastUpdated});
         const response = await fetch(`http://localhost:5000/search-repo?${params}`, {
             method : 'GET',
@@ -63,7 +58,8 @@ function SearchPage (){
             console.log("repo fetching failed : ", data.message)
         }
         
-        setRepos(data.repositories)
+        setRepos(data.repositories);
+        setLoading(false);
     }
 
     return (
@@ -84,7 +80,6 @@ function SearchPage (){
             {loading ? "Loading...." : (repos.map((repo)=><div key={repo.id}><RepoCard 
                 repo={repo}
                 isSaved={savedIds.includes(repo.id.toString())}
-                savedDocId={savedDocIds[repo.id.toString()]}
                 onSave={addToSaved}
                 onUnsave={removeFromSaved}
                 /></div>))}

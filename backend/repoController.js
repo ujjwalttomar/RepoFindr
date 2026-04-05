@@ -68,7 +68,7 @@ export const searchRepos = async (req, res) => {
 export const fetchAllSavedRepos = async (req, res) => {
 
     try{
-        console.log("fetchAllSavedRepos hit, user:", req.user)
+        
         const userID = req.user.userId;
         const fetchedRepos = await SavedRepo.find({savedBy:userID});
 
@@ -164,7 +164,7 @@ export const saveRepo = async (req, res) => {
         if(alreadySaved){
             return res.status(400).json({
                 message : "repo is alreadysaved",  // i m using this message to change the save button to unsave  button for already saved repos.
-                savedDocId: alreadySaved._id 
+                savedId: alreadySaved._id 
             })
         }
         const newRepo = await SavedRepo.create({
@@ -200,12 +200,13 @@ export const saveRepo = async (req, res) => {
     }
 }
 
-export const unsaveRepo = async (req, res) => {
+export const unsaveRepo = async (req, res) => {2
 
     try{
+       
         const repoId = req.params.repoId;
 
-        const repo = await SavedRepo.findById(repoId);
+        const repo = await SavedRepo.findOne({RepoID:repoId, savedBy : req.user.userId});
 
         if(!repo){
             return res.status(404).json({
@@ -218,9 +219,6 @@ export const unsaveRepo = async (req, res) => {
         return res.status(200).json({
             message : "repo deleted successfully"
         })
-        // take the repo if or somethign to identify the repo in db , and find if it exists. 
-        // if not return suitable error , and if it exists , then unsave it , delete it from the db.
-        // save the db again.
     }catch(error){
         return res.status(500).json({
             message : "server side error",
