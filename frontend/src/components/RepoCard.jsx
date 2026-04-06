@@ -62,32 +62,36 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
     }
 
     return (
-        <>
-        <div>
-            <div>
-                <img src={repo.owner.avatar}></img>
-                <span>{repo.owner.username}</span>
+        <div className="flex flex-col justify-center   mb-16  shadow shadow-gray-500 p-5 gap-2 mt-5">
+            <div className="flex justify-between ">
+                <div className="flex gap-4 justify-center items-center">
+                    <img src={repo.owner.avatar} className="w-10 h-10 rounded"></img>
+                    <span className="font-extrabold">{repo.owner.username}</span>
+                </div>
+
+                {isSaved ? 
+                (<button onClick={HandleUnsave} className="text-blue-600 bg-blue-300 hover:bg-blue-500 rounded font-bold text-center px-4 py-2">UNSAVE</button>)
+                :(<button onClick={HandleSave}  className="text-white bg-blue-600 hover:bg-blue-500 rounded font-bold text-center px-4 py-2">SAVE</button>)
+                }
             </div>
 
-            {isSaved ? 
-            (<button onClick={HandleUnsave}>UNSAVE</button>)
-            :(<button onClick={HandleSave}>SAVE</button>)
-            }
+            <h1><a href={repo.url} className="font-extrabold text-blue-700 text-xl">{repo.repoName}</a></h1>
+
+            <p className=" text-gray-600 font-bold ">{repo.description}</p>
+
+            <div className=" flex gap-4">
+                <span className="font-semibold text-gray-800">Forks: {repo.forks}</span>
+                <span className="font-semibold text-gray-800">Stars: {repo.stars}</span>
+                <span className="font-semibold text-gray-800">Language: {repo.language}</span>
+                
+            </div >
+            
+            <div className="flex gap-7">
+                <p className=" text-gray-800"> pushed on : {new Date(repo.pushedAt).toLocaleDateString()}</p>
+                <p className="text-gray-800"> updated on : {new Date(repo.updatedAt).toLocaleDateString()}</p>
+            </div>
+            
         </div>
-
-        <h1><a href={repo.url}>{repo.repoName}</a></h1>
-
-        <p>{repo.description}</p>
-
-        <div>
-            <span>{repo.forks}</span>
-            <span>{repo.stars}</span>
-            <span>{repo.language}</span>
-             
-        </div>
-        <p> pushed on : {repo.pushedAt}</p>
-        <p> updated on : {repo.updatedAt}</p>
-        </>
     )
 }
 

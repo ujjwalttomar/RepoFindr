@@ -64,27 +64,35 @@ function SearchPage (){
 
     return (
        <>
-        <div>
-            <input placeholder="search for topic or name " name="topic" value={topic} onChange={(e)=>{setTopic(e.target.value)}} ></input>
-            <button onClick={handleSearch}>Search</button>
-        </div>
+       <div className="flex flex-col mx-60 mt-12 gap-6 p-20 shadow shadow-gray-400 rounded-md">
+            <div className="flex justify-between gap-16">
+                <input placeholder="search for topic or name " name="topic" value={topic} onChange={(e)=>{setTopic(e.target.value)}} 
+                   className= "border rounded w-full p-3 font-bold" ></input>
+                <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded ">Search</button>
+            </div>
         
-        <div>
-            <input type="text" name="language" placeholder="language" value={language} onChange={(e)=>{setLanguage(e.target.value)}} />
-            <input type="text" name="stars" placeholder="stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}/>
-            <input type="text" name="forks" placeholder="forks" value={forks} onChange={(e)=>{setForks(e.target.value)}} />
-            <input type="text" name="lastUpdated" placeholder="last-updated" value={lastUpdated} onChange={(e)=>{setLastUpdated(e.target.value)}} />
+            <div className="flex gap-5 ">
+                <input type="text" name="language" placeholder="language" value={language} onChange={(e)=>{setLanguage(e.target.value)}} 
+                    className="font-bold border rounded p-2"/>
+                <input type="text" name="stars" placeholder="stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}
+                    className="font-bold border rounded p-2"/>
+                <input type="text" name="forks" placeholder="forks" value={forks} onChange={(e)=>{setForks(e.target.value)}}
+                    className="font-bold border rounded p-2" />
+                <input type="text" name="lastUpdated" placeholder="last-updated" value={lastUpdated} onChange={(e)=>{setLastUpdated(e.target.value)}} 
+                    className="font-bold border rounded p-2"/>
+            </div>
         </div>
 
-        <div>
-            {loading ? "Loading...." : (repos.map((repo)=><div key={repo.id}><RepoCard 
-                repo={repo}
-                isSaved={savedIds.includes(repo.id.toString())}
-                onSave={addToSaved}
-                onUnsave={removeFromSaved}
-                /></div>))}
-        </div>
+            <div className="mx-60">
+                {loading ? "Loading...." : (repos.map((repo)=><div key={repo.id}><RepoCard 
+                    repo={repo}
+                    isSaved={savedIds.includes(repo.id.toString())}
+                    onSave={addToSaved}
+                    onUnsave={removeFromSaved}
+                    /></div>))}
+            </div>
        </>
+      
     )
 }
 

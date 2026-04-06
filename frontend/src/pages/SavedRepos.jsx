@@ -47,14 +47,13 @@ function SavedRepos (){
     }
 
     return (
-       <>
-       {repos ? repos.map((repo)=><RepoCard key ={repo.id}
-            repo = {repo}
-            onUnsave = {()=>{RemoveFromRepos(repo.id)}}
-            isSaved={true}
-       
-       />) :  "no repo saved yet"}
-       </>        
+       <div className="m-60">
+            {repos ? repos.map((repo)=><RepoCard key ={repo.id}
+                repo = {repo}
+                onUnsave = {()=>{RemoveFromRepos(repo.id)}}
+                isSaved={true}
+            />) :  "no repo saved yet"}
+       </div>      
     )
 }
 

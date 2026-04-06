@@ -8,27 +8,35 @@ import { AuthContext } from "../context/AuthContext";
 function Navbar (){
     const {token , logout} = useContext(AuthContext);
     return(
-        <div style={{display : 'flex', justifyContent:"space-between"}}>
+        <div className="flex items-center justify-between p-5 shadow shadow-gray-300 px-60 py-5 bg-white">
 
-            <div> <h1>RepoFindr</h1></div>
+            <div> <h1 className="text-3xl font-bold text-blue-600 ">RepoFindr</h1></div>
 
-            <div style={{display : "flex", gap:10}}>
-                <Link to="/"><h2>Home</h2></Link>
-                <Link to="/saved"><h2>Saved</h2></Link>
+            <div className="flex justify-between  gap-6">
+                <Link to="/" className="font-bold  text-xl hover:text-blue-500">Home</Link>
+                <Link to="/saved" className="font-bold text-xl hover:text-blue-500">Saved</Link>
             </div>
 
-           { (token)?
-               ( <div style={{display : "flex", gap:"10px"}}>
-                    <h2>Welcome...</h2>
-                    <button style={{padding : "0px 16px ", fontWeight : "bold"}}onClick={logout}>Logout</button>
-                </div>
+            <div className="flex justify-between items-center gap-6">
+                   { (token)?
+               ( 
+                <>
+                    <h2 className="text-xl">Welcome...</h2>
+                    <button onClick={logout} className="bg-blue-500 text-white px-4 py-2 rounded font-bold hover:bg-blue-600">
+                        Logout
+                    </button>
+                </>
+                
             )
             :
-               ( <div style={{display : "flex", gap:10}}>
-                    <Link to="/login"><h2>Login</h2></Link>
-                    <Link to="/register"><h2>Register</h2></Link>
-                </div>)
-              }        
+               ( 
+                <>
+                    <Link to="/login" className="font-bold  text-xl">Login</Link>
+                    <Link to="/register" className="font-bold  text-xl">Register</Link>
+                </>
+                )
+              }     
+            </div>       
 
         </div>
     )
