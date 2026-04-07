@@ -16,9 +16,9 @@ export const searchRepos = async (req, res) => {
 
         if(topic)query += topic;
         if(language)query += ` language:${language}`;
-        if(stars)query += ` stars:${stars}`;
-        if(forks)query += ` forks:${forks}`;
-        if(lastUpdated) query += ` pushed:${lastUpdated}`;
+        if(stars)query += ` stars:>=${stars}`;
+        if(forks)query += ` forks:>=${forks}`;
+        if(lastUpdated) query += ` pushed:>${lastUpdated}`;
         
 
 
@@ -125,6 +125,9 @@ export const fetchTrendingRepos = async (req, res) => {
                 stars:repo.stargazers_count,
                 forks:repo.forks_count,
                 language: repo.language,
+                description: repo.description,
+                pushedAt: repo.pushed_at,
+                updatedAt: repo.updated_at,
                 owner : {
                     username : repo.owner.login,
                     avatar : repo.owner.avatar_url,
@@ -135,14 +138,10 @@ export const fetchTrendingRepos = async (req, res) => {
 
         });
 
-        // to fetch trending repos , we will fetch repos created in last 7 days with their starts or forks in ascending order.
-        // display the result, i have to clear the api resutl for reducing the error of umpreidictive behaviour of api and predictive errors.
-        // return the resutls of api as response.
-        // still looking for some ideas , how can i get trending repos , what should be our bases . also how to sort thigns.
     }catch(error){
         return res.status(500).json({
             message : "server side error",
-            error
+            error : error.message
         })
     }
 }

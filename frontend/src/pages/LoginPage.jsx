@@ -2,10 +2,10 @@
 
 
 import React, {useState, useContext} from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate ,Link} from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
- function LoginPage (){
+function LoginPage (){
     const [identifier, setIdentifier] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -33,11 +33,26 @@ import { AuthContext } from "../context/AuthContext";
         
     }
     return (
-        <div style={{display:"flex", gap:"10px"}}>
-            <input placeholder="email or username" type="text" name="identifier" value={identifier} onChange={(e) => {setIdentifier(e.target.value)}}></input>
-            <input placeholder="password" type="password" minLength={8} name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}></input>
-            <button onClick={handleSubmit}>Login</button>
-
+        <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+            <div className="bg-white w-full max-w-md rounded-xl border border-gray-200 p-8 flex flex-col gap-4">
+                <div className="text-center mb-2">
+                    <h1 className="text-2xl font-medium">Sign in</h1>
+                    <p className="text-sm text-gray-500 mt-1">Welcome back to RepoFindr</p>
+                </div>
+                <input placeholder="Email or username" type="text" name="identifier" value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                    className="border border-gray-300 rounded-lg p-2.5 text-sm w-full outline-none focus:border-blue-500" />
+                <input placeholder="Password" type="password" name="password" value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="border border-gray-300 rounded-lg p-2.5 text-sm w-full outline-none focus:border-blue-500" />
+                <button onClick={handleSubmit}
+                    className="bg-blue-600 text-white rounded-lg p-2.5 text-sm font-medium hover:bg-blue-700">
+                    Sign in
+                </button>
+                <p className="text-center text-sm text-gray-500">
+                    Don't have an account? <Link to="/register" className="text-blue-600">Sign up</Link>
+                </p>
+            </div>
         </div>
     )
 }

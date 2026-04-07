@@ -63,38 +63,44 @@ function SearchPage (){
     }
 
     return (
-       <>
-       <div className="flex flex-col mx-60 mt-12 gap-6 p-20 shadow shadow-gray-400 rounded-md">
-            <div className="flex justify-between gap-16">
-                <input placeholder="search for topic or name " name="topic" value={topic} onChange={(e)=>{setTopic(e.target.value)}} 
-                   className= "border rounded w-full p-3 font-bold" ></input>
-                <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded ">Search</button>
-            </div>
-        
-            <div className="flex gap-5 ">
-                <input type="text" name="language" placeholder="language" value={language} onChange={(e)=>{setLanguage(e.target.value)}} 
-                    className="font-bold border rounded p-2"/>
-                <input type="text" name="stars" placeholder="stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}
-                    className="font-bold border rounded p-2"/>
-                <input type="text" name="forks" placeholder="forks" value={forks} onChange={(e)=>{setForks(e.target.value)}}
-                    className="font-bold border rounded p-2" />
-                <input type="text" name="lastUpdated" placeholder="last-updated" value={lastUpdated} onChange={(e)=>{setLastUpdated(e.target.value)}} 
-                    className="font-bold border rounded p-2"/>
-            </div>
+    <>
+        <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow shadow-gray-400 rounded-md">
+                <div className="flex justify-between gap-4">
+                    <input placeholder="search for topic or name" name="topic" value={topic} onChange={(e)=>{setTopic(e.target.value)}} 
+                    className="border rounded w-full p-3 font-bold"></input>
+                    <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded">Search</button>
+                </div>
+            
+                <div className="flex flex-col gap-3">
+                    <div className="flex gap-4">
+                        <input type="text" name="language" placeholder="language" value={language} onChange={(e)=>{setLanguage(e.target.value)}} 
+                            className="font-bold border rounded p-2 w-full"/>
+                        <input type="date" name="lastUpdated" value={lastUpdated} onChange={(e)=>{setLastUpdated(e.target.value)}} 
+                            className="font-bold border rounded p-2 w-full"/>
+                    </div>
+                    <div className="flex gap-4">
+                        <input type="text" name="stars" placeholder="min stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}
+                            className="font-bold border rounded p-2 w-full"/>
+                        <input type="text" name="forks" placeholder="min forks" value={forks} onChange={(e)=>{setForks(e.target.value)}}
+                            className="font-bold border rounded p-2 w-full"/>
+                    </div>
+                </div>
         </div>
 
-            <div className="mx-60">
-                {loading ? "Loading...." : (repos.map((repo)=><div key={repo.id}><RepoCard 
-                    repo={repo}
-                    isSaved={savedIds.includes(repo.id.toString())}
-                    onSave={addToSaved}
-                    onUnsave={removeFromSaved}
-                    /></div>))}
-            </div>
-       </>
-      
+        <div className="max-w-6xl mx-auto  w-full">
+            {loading ? "Loading...." : (repos.map((repo) => (
+                <div key={repo.id} className="w-full">
+                    <RepoCard 
+                        repo={repo}
+                        isSaved={savedIds.includes(repo.id.toString())}
+                        onSave={addToSaved}
+                        onUnsave={removeFromSaved}
+                    />
+                </div>
+            )))}
+        </div>
+    </>
     )
 }
-
 
 export default SearchPage;

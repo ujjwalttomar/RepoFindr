@@ -10,7 +10,7 @@ function Navbar (){
     return(
         <div className="flex items-center justify-between p-5 shadow shadow-gray-300 px-60 py-5 bg-white">
 
-            <div> <h1 className="text-3xl font-bold text-blue-600 ">RepoFindr</h1></div>
+            <div> <h1 className="text-3xl font-bold text-blue-600 "> RepoFindr</h1></div>
 
             <div className="flex justify-between  gap-6">
                 <Link to="/" className="font-bold  text-xl hover:text-blue-500">Home</Link>
@@ -33,6 +33,7 @@ function Navbar (){
                 <>
                     <Link to="/login" className="font-bold  text-xl">Login</Link>
                     <Link to="/register" className="font-bold  text-xl">Register</Link>
+                    <Link to="/trending" className="font-bold  text-xl">Trending</Link>
                 </>
                 )
               }     

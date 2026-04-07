@@ -62,7 +62,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
     }
 
     return (
-        <div className="flex flex-col justify-center   mb-16  shadow shadow-gray-500 p-5 gap-2 mt-5">
+        <div className="flex flex-col rounded justify-center w-full  mb-10 shadow shadow-gray-500 p-5 gap-2 mt-5">
             <div className="flex justify-between ">
                 <div className="flex gap-4 justify-center items-center">
                     <img src={repo.owner.avatar} className="w-10 h-10 rounded"></img>
