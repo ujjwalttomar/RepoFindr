@@ -103,7 +103,7 @@ export const fetchTrendingRepos = async (req, res) => {
         query += `pushed:>${dateString}`;
         
 
-        const response = await axios.get(`https://api.github.com/search/repositories/`,{
+        const response = await axios.get(`https://api.github.com/search/repositories`,{
             params : {
                 q : query,
                 sort : "stars",
@@ -139,6 +139,7 @@ export const fetchTrendingRepos = async (req, res) => {
         });
 
     }catch(error){
+        console.log("handling server error : ", error.message);
         return res.status(500).json({
             message : "server side error",
             error : error.message

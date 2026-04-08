@@ -15,6 +15,7 @@ function Navbar (){
             <div className="flex justify-between  gap-6">
                 <Link to="/" className="font-bold  text-xl hover:text-blue-500">Home</Link>
                 <Link to="/saved" className="font-bold text-xl hover:text-blue-500">Saved</Link>
+                <Link to="/trending" className="font-bold text-xl hover:text-blue-500">Trending</Link>
             </div>
 
             <div className="flex justify-between items-center gap-6">
@@ -33,7 +34,7 @@ function Navbar (){
                 <>
                     <Link to="/login" className="font-bold  text-xl">Login</Link>
                     <Link to="/register" className="font-bold  text-xl">Register</Link>
-                    <Link to="/trending" className="font-bold  text-xl">Trending</Link>
+                    
                 </>
                 )
               }     

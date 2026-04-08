@@ -10,6 +10,7 @@ function SavedRepos (){
 
     const { token } = useContext(AuthContext);
     const [repos, setRepos] = useState([]);
+    const [loading ,setLoading] = useState(false);
     
     useEffect(() => {
         async function fetchSaved() {
@@ -38,8 +39,11 @@ function SavedRepos (){
             }))
             ) : [];
             setRepos(normalized);
+            setLoading(false);
         }
+        setLoading(true);
         fetchSaved()
+        
     }, [])
 
     function RemoveFromRepos (id){
@@ -48,11 +52,11 @@ function SavedRepos (){
 
     return (
         <div className="max-w-6xl mx-auto px-8 mt-12">
-            {repos ? repos.map((repo) => <RepoCard key={repo.id}
+            {(repos.length !==0 )? repos.map((repo) => <RepoCard key={repo.id}
                 repo={repo}
                 onUnsave={() => {RemoveFromRepos(repo.id)}}
                 isSaved={true}
-            />) : "no repo saved yet"}
+            />) : (!loading ? "no repo saved yet":"")}
         </div>      
     )
 }

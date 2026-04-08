@@ -24,7 +24,7 @@ function App(){
             }/>
             <Route path="/register"  element={<RegisterPage/>}/>
             <Route path="/login"  element={<LoginPage/>}/>
-            <Route path="/trending" element={<TrendingPage/>}
+            <Route path="/trending" element={<TrendingPage/>}/>
         </Routes></>
     )
 }

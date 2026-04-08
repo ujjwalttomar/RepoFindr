@@ -70,7 +70,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
                 </div>
 
                 {isSaved ? 
-                (<button onClick={HandleUnsave} className="text-blue-600 bg-blue-300 hover:bg-blue-500 rounded font-bold text-center px-4 py-2">UNSAVE</button>)
+                (<button onClick={HandleUnsave} className="text-white bg-blue-300 hover:bg-blue-500 rounded font-bold text-center px-4 py-2">UNSAVE</button>)
                 :(<button onClick={HandleSave}  className="text-white bg-blue-600 hover:bg-blue-500 rounded font-bold text-center px-4 py-2">SAVE</button>)
                 }
             </div>

@@ -16,9 +16,12 @@ function SearchPage (){
     const [repos, setRepos]= useState([]);
     const { token } = useContext(AuthContext);
     const [savedIds, setSavedIds] = useState([]);
+    const [searched, setSearched] = useState(false);
+    const [error ,setError] = useState("");
     
     useEffect(()=>{
         async function fetchSaved(){
+            if(!token) return;
             const reponse = await fetch("http://localhost:5000/savedRepos",{
                 method : 'GET',
                 headers : {"authorization" : `Bearer ${token}`}
@@ -42,6 +45,7 @@ function SearchPage (){
     async function handleSearch(){
         
         setLoading(true);
+        setSearched(true);
         const params= new URLSearchParams({topic, language, stars, forks, lastUpdated});
         const response = await fetch(`http://localhost:5000/search-repo?${params}`, {
             method : 'GET',
@@ -55,6 +59,7 @@ function SearchPage (){
         if(response.ok){
             console.log(data);
         }else{
+            setError(data.message);
             console.log("repo fetching failed : ", data.message)
         }
         
@@ -88,7 +93,7 @@ function SearchPage (){
         </div>
 
         <div className="max-w-6xl mx-auto  w-full">
-            {loading ? "Loading...." : (repos.map((repo) => (
+            {loading ? "Loading...." : ((repos.length!==0)? (repos.map((repo) => (
                 <div key={repo.id} className="w-full">
                     <RepoCard 
                         repo={repo}
@@ -97,10 +102,12 @@ function SearchPage (){
                         onUnsave={removeFromSaved}
                     />
                 </div>
-            )))}
+            )))
+            :(!searched ? "":"no match found !!!, try changing filters or topic") )}
         </div>
     </>
     )
 }
 
 export default SearchPage;
+
