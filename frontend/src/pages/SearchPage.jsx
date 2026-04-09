@@ -22,7 +22,7 @@ function SearchPage (){
     useEffect(()=>{
         async function fetchSaved(){
             if(!token) return;
-            const reponse = await fetch("import.meta.env.VITE_API_URL/savedRepos",{
+            const reponse = await fetch(`${import.meta.env.VITE_API_URL}/savedRepos`,{
                 method : 'GET',
                 headers : {"authorization" : `Bearer ${token}`}
             })
@@ -47,7 +47,7 @@ function SearchPage (){
         setLoading(true);
         setSearched(true);
         const params= new URLSearchParams({topic, language, stars, forks, lastUpdated});
-        const response = await fetch(`import.meta.env.VITE_API_URL/search-repo?${params}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/search-repo?${params}`, {
             method : 'GET',
             headers : {
                 "content-type" : "application/json",

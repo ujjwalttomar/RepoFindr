@@ -16,7 +16,7 @@ function TrendingPage (){
     useEffect(()=>{
         async function fetchSaved (){
             if(!token) return;
-            const response = await fetch("import.meta.env.VITE_API_URL/savedRepos",{
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/savedRepos`,{
                 headers : { "authorization" : `Bearer ${token}`}
             })
             const data = await response.json();
@@ -42,7 +42,7 @@ function TrendingPage (){
 
     useEffect(()=>{
         async function fetchTrending (){
-            const response = await fetch("import.meta.env.VITE_API_URL/fetch-trending-repos");
+            const response = await fetch(`${import.meta.env.VITE_API_URL}fetch-trending-repos`);
             const data = await response.json();
 
             if(response.ok){
