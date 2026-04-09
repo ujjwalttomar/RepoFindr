@@ -11,7 +11,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
 
     async function HandleSave (){
         
-        const response = await fetch("import.meta.env.VITE_API_URL/repo/save",{
+        const response = await fetch(`${import.meta.env.VITE_API_UR}/repo/save`,{
             method : 'POST',
             headers : {
                 "content-type" : "application/json",
