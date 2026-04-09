@@ -11,9 +11,11 @@ function RegisterPage (){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [error, setError] = useState("");
 
 
     async function handleSubmit(){
+        setError("");
         const response = await fetch("http://localhost:5000/register",{
             method : 'POST',
             headers : {
@@ -30,7 +32,8 @@ function RegisterPage (){
             navigate("/login");
         }
         else{
-            console.log("Register failer : ", data.message);
+            setError(`Registeration failed!! :  ${data.message}`);
+            console.log("Registeration failed : ", data.message);
         }
         
     }
@@ -42,14 +45,17 @@ function RegisterPage (){
                     <h1 className="text-2xl font-medium">Create account</h1>
                     <p className="text-sm text-gray-500 mt-1">Start saving repos today</p>
                 </div>
+
+                {error && <p className="text-red-500 text-center text-bold">{error}</p>}
+
                 <input placeholder="Email" type="email" name="email" value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)} 
                     className="border border-gray-300 rounded-lg p-2.5 text-sm w-full outline-none focus:border-blue-500" />
                 <input placeholder="Username" type="text" name="username" value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => setUsername(e.target.value)} 
                     className="border border-gray-300 rounded-lg p-2.5 text-sm w-full outline-none focus:border-blue-500" />
                 <input placeholder="Password" type="password" name="password" value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)} 
                     className="border border-gray-300 rounded-lg p-2.5 text-sm w-full outline-none focus:border-blue-500" />
                 <button onClick={handleSubmit}
                     className="bg-blue-600 text-white rounded-lg p-2.5 text-sm font-medium hover:bg-blue-700">

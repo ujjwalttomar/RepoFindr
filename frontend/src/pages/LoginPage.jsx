@@ -10,9 +10,11 @@ function LoginPage (){
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const {login} = useContext(AuthContext);
+    const [error, setError] = useState("");
     
 
     async function handleSubmit(){
+        setError("");
         
         const response = await fetch("http://localhost:5000/login",{
                 method : 'POST',
@@ -28,6 +30,7 @@ function LoginPage (){
 
             navigate("/");
         }else{
+            setError("login failed!! : ", data.message)
             console.log("Login failed : ",data.message);
         }
         
@@ -39,6 +42,9 @@ function LoginPage (){
                     <h1 className="text-2xl font-medium">Sign in</h1>
                     <p className="text-sm text-gray-500 mt-1">Welcome back to RepoFindr</p>
                 </div>
+
+                {error && <p className="text-red-500 text-center font-bold">{error}</p>}
+
                 <input placeholder="Email or username" type="text" name="identifier" value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     className="border border-gray-300 rounded-lg p-2.5 text-sm w-full outline-none focus:border-blue-500" />

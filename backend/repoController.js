@@ -14,6 +14,11 @@ export const searchRepos = async (req, res) => {
 
         let query = ""
 
+        if(!topic){
+            return res.status(400).json({
+                message : "topic field is required to make a search "
+            })
+        }
         if(topic)query += topic;
         if(language)query += ` language:${language}`;
         if(stars)query += ` stars:>=${stars}`;
@@ -53,9 +58,7 @@ export const searchRepos = async (req, res) => {
             }))
 
         });
-        // usign then to make a api call ,
-        // after fetchign the results , use that data to create a more predictive respose with less unpredictive response and  errors.
-        // return the results of fetch using pagination .
+
     }catch(error){
         console.error("GitHub API Error:", error.response?.data || error.message);
         return res.status(500).json({

@@ -36,14 +36,14 @@ function SearchPage (){
     function addToSaved (id){
         setSavedIds((prev)=>[...prev, id])
        
-   }
+    }
     function removeFromSaved (id){
         setSavedIds((prev)=>prev.filter(SavedId => SavedId != id));
         
     }
 
     async function handleSearch(){
-        
+        setError("");
         setLoading(true);
         setSearched(true);
         const params= new URLSearchParams({topic, language, stars, forks, lastUpdated});
@@ -58,12 +58,13 @@ function SearchPage (){
         const data = await response.json();
         if(response.ok){
             console.log(data);
+            setRepos(data.repositories);
         }else{
+            setRepos([]);
             setError(data.message);
             console.log("repo fetching failed : ", data.message)
         }
         
-        setRepos(data.repositories);
         setLoading(false);
     }
 
@@ -71,7 +72,7 @@ function SearchPage (){
     <>
         <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow shadow-gray-400 rounded-md">
                 <div className="flex justify-between gap-4">
-                    <input placeholder="search for topic or name" name="topic" value={topic} onChange={(e)=>{setTopic(e.target.value)}} 
+                    <input type="text" placeholder="search for topic or name" name="topic" value={topic} onChange={(e)=>{setTopic(e.target.value)}} 
                     className="border rounded w-full p-3 font-bold"></input>
                     <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded">Search</button>
                 </div>
@@ -84,27 +85,29 @@ function SearchPage (){
                             className="font-bold border rounded p-2 w-full"/>
                     </div>
                     <div className="flex gap-4">
-                        <input type="text" name="stars" placeholder="min stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}
+                        <input type="number" name="stars" placeholder="min stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}
                             className="font-bold border rounded p-2 w-full"/>
-                        <input type="text" name="forks" placeholder="min forks" value={forks} onChange={(e)=>{setForks(e.target.value)}}
+                        <input type="number" name="forks" placeholder="min forks" value={forks} onChange={(e)=>{setForks(e.target.value)}}
                             className="font-bold border rounded p-2 w-full"/>
                     </div>
                 </div>
         </div>
+        
+        { error && <p className="text-red-500 font-bold max-w-6xl mx-auto  w-full py-10"> Error : {error}</p> }
 
         <div className="max-w-6xl mx-auto  w-full">
-            {loading ? "Loading...." : ((repos.length!==0)? (repos.map((repo) => (
-                <div key={repo.id} className="w-full">
-                    <RepoCard 
-                        repo={repo}
-                        isSaved={savedIds.includes(repo.id.toString())}
-                        onSave={addToSaved}
-                        onUnsave={removeFromSaved}
-                    />
-                </div>
-            )))
-            :(!searched ? "":"no match found !!!, try changing filters or topic") )}
-        </div>
+                {loading ? "Loading...." : ((repos.length!==0) ? (repos.map((repo) => (
+                    <div key={repo.id} className="w-full">
+                        <RepoCard 
+                            repo={repo}
+                            isSaved={savedIds.includes(repo.id.toString())}
+                            onSave={addToSaved}
+                            onUnsave={removeFromSaved}
+                        />
+                    </div>
+                    )))
+                    :(!searched ? "":<p className="font-bold">no match found !!!, try changing filters or topic</p>) )}
+        </div>       
     </>
     )
 }
