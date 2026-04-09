@@ -42,7 +42,7 @@ function TrendingPage (){
 
     useEffect(()=>{
         async function fetchTrending (){
-            const response = await fetch(`${import.meta.env.VITE_API_URL}fetch-trending-repos`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/fetch-trending-repos`);
             const data = await response.json();
 
             if(response.ok){
