@@ -3,14 +3,19 @@
 
 import {useContext} from "react"
 import {AuthContext} from "../context/AuthContext"
+import {useNavigate} from "react-router-dom"
 
 
 function RepoCard ({repo, onSave, onUnsave, isSaved}) {
     
     const {token} = useContext(AuthContext);
+    const Navigate = useNavigate();
 
     async function HandleSave (){
         
+        if(!token){
+           return Navigate("/login");
+        }
         const response = await fetch(`${import.meta.env.VITE_API_URL}/repo/save`,{
             method : 'POST',
             headers : {
