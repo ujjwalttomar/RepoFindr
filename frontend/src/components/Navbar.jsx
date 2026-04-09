@@ -6,7 +6,9 @@ import {useContext} from "react";
 import { AuthContext } from "../context/AuthContext";
 
 function Navbar (){
-    const {token , logout} = useContext(AuthContext);
+
+    const {token , logout, user} = useContext(AuthContext);
+
     return(
         <div className="flex items-center justify-between p-5 shadow shadow-gray-300 px-60 py-5 bg-white">
 
@@ -22,7 +24,10 @@ function Navbar (){
                    { (token)?
                ( 
                 <>
-                    <h2 className="text-xl">Welcome...</h2>
+                    <p class="text-gray-800">
+                            Welcome, 
+                            <span class="text-blue-600 font-semibold"> {user.username} !!</span>
+                    </p>
                     <button onClick={logout} className="bg-blue-500 text-white px-4 py-2 rounded font-bold hover:bg-blue-600">
                         Logout
                     </button>

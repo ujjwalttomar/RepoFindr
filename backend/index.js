@@ -2,7 +2,7 @@
 
 
 import express from "express";
-import {registerUser, loginUser, changePassword, logoutUser, editProfile} from "./authController.js";
+import {registerUser, loginUser, changePassword, logoutUser, editProfile, getMe} from "./authController.js";
 import {searchRepos, fetchTrendingRepos, saveRepo, fetchAllSavedRepos, unsaveRepo} from "./repoController.js";
 import {authenticate, isOwner} from "./authMiddleware.js";
 import connectToDB from "./db.js";
@@ -18,13 +18,14 @@ app.use(express.json());
 
 
 app.use(cors({
-    origin : "http://localhost:5173",
+    origin : process.env.CLIENT_URL,
     credentials : true
 }))
 
 
 //  auth routes
 
+app.get("/user/me",authenticate, getMe);
 app.post("/register", registerUser);
 app.post("/login", loginUser);
 app.post("/user/:userId/change-password", authenticate, changePassword);

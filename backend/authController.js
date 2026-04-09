@@ -6,6 +6,28 @@ import bcrypt from "bcrypt";
 import {User} from "./models.js";
 
 
+export const getMe = async (req, res)=>{
+    
+    try{
+        const userId = req.user.userId;
+        const user = await User.findById(userId).select("username email");
+        if(!user){
+            return res.status(404).json({
+                message : "user not found"
+            })
+        }
+        return res.status(200).json({
+            user:user,
+            message: "user fetched successfully"
+        })
+    }catch(error){
+        console.error(error);
+        res.status(500).json({
+            message : "some error occured at server side",
+            error:error.message
+        });
+    }
+}
 
 export const registerUser = async (req, res) => {
 
