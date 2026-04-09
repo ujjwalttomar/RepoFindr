@@ -21,7 +21,7 @@ export function AuthProvider({children}){
 
         async function getUser (){
             if(!token)return;
-            const response = await fetch("http://localhost:5000/user/me",{
+            const response = await fetch("import.meta.env.VITE_API_URL/user/me",{
                 headers : {
                     "authorization" : `Bearer ${token}`
                 }

@@ -11,7 +11,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
 
     async function HandleSave (){
         
-        const response = await fetch("http://localhost:5000/repo/save",{
+        const response = await fetch("import.meta.env.VITE_API_URL/repo/save",{
             method : 'POST',
             headers : {
                 "content-type" : "application/json",
@@ -46,7 +46,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
     }
     async function HandleUnsave (){
         
-        const response = await fetch(`http://localhost:5000/savedRepos/${repo.id}`,{
+        const response = await fetch(`import.meta.env.VITE_API_URL/savedRepos/${repo.id}`,{
             method : "DELETE",
             headers : {
                 "authorization" : `Bearer ${token}`

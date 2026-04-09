@@ -15,7 +15,7 @@ function SavedRepos (){
     useEffect(() => {
         async function fetchSaved() {
 
-            const response = await fetch("http://localhost:5000/savedRepos", {
+            const response = await fetch("import.meta.env.VITE_API_URL/savedRepos", {
                 headers: { "authorization": `Bearer ${token}` }
             })
 
