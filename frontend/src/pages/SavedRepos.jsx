@@ -51,7 +51,7 @@ function SavedRepos (){
     }
 
     return (
-        <div className="max-w-6xl mx-auto px-8 mt-12">
+        <div className="max-w-6xl mx-auto w-full  mt-12">
             {(repos.length !==0 )? repos.map((repo) => <RepoCard key={repo.id}
                 repo={repo}
                 onUnsave={() => {RemoveFromRepos(repo.id)}}

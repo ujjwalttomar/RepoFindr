@@ -31,7 +31,26 @@ function SearchPage (){
             setSavedIds(ids);
         } 
         fetchSaved()
+
+        async function fetchFromSessionStorage(){
+            const savedRepos = sessionStorage.getItem("repos")
+            const savedTopic = sessionStorage.getItem("topic")
+            const savedLanguage = sessionStorage.getItem("language");
+            const savedForks = sessionStorage.getItem("forks");
+            const savedStars = sessionStorage.getItem("stars");
+            const savedLastUpdated = sessionStorage.getItem("lastUpdated");
+
+            if(savedRepos) setRepos(JSON.parse(savedRepos));
+            if(savedTopic) setTopic(JSON.parse(savedTopic));
+            if(savedLanguage) setLanguage(JSON.parse(savedLanguage));
+            if(savedForks) setForks(JSON.parse(savedForks));
+            if(savedStars) setStars(JSON.parse(savedStars));
+            if(savedLastUpdated) setLastUpdated(JSON.parse(savedLastUpdated));
+        }
+        fetchFromSessionStorage();
+
     },[]);
+
 
     function addToSaved (id){
         setSavedIds((prev)=>[...prev, id])
@@ -59,6 +78,14 @@ function SearchPage (){
         if(response.ok){
             console.log(data);
             setRepos(data.repositories);
+
+            sessionStorage.setItem("repos", JSON.stringify(data.repositories));
+            sessionStorage.setItem("topic", JSON.stringify(topic));
+            sessionStorage.setItem("language", JSON.stringify(language));
+            sessionStorage.setItem("forks", JSON.stringify(forks));
+            sessionStorage.setItem("stars", JSON.stringify(stars));
+            sessionStorage.setItem("lastUpdated", JSON.stringify(lastUpdated));
+
         }else{
             setRepos([]);
             setError(data.message);
