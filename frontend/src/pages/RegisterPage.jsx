@@ -64,6 +64,7 @@ function RegisterPage (){
                 <p className="text-center text-sm text-gray-500">
                     Already have an account? <Link to="/login" className="text-blue-600">Sign in</Link>
                 </p>
+                <p><Link to="/" className="text-blue-500 mt-2 block text-center">← Back to Home</Link></p>
             </div>
         </div>
     )

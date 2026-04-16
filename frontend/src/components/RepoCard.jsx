@@ -71,7 +71,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
             <div className="flex justify-between ">
                 <div className="flex gap-4 justify-center items-center">
                     <img src={repo.owner.avatar} className="w-10 h-10 rounded"></img>
-                    <span className="font-extrabold">{repo.owner.username}</span>
+                    <span className="font-extrabold hover:text-blue-500"><a href={repo.owner.profileUrl} target="_blank" >{repo.owner.username}</a></span>
                 </div>
 
                 {isSaved ? 
@@ -80,7 +80,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
                 }
             </div>
 
-            <h1><a href={repo.url} className="font-extrabold text-blue-700 text-xl">{repo.repoName}</a></h1>
+            <h1><a href={repo.url} target="_blank" className="font-extrabold text-blue-700 text-xl">{repo.repoName}</a></h1>
 
             <p className=" text-gray-600 font-bold ">{repo.description}</p>
 

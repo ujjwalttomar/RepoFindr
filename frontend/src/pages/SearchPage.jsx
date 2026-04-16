@@ -97,7 +97,7 @@ function SearchPage (){
 
     return (
     <>
-        <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow shadow-gray-400 rounded-md">
+        <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow shadow-blue-700 rounded-md">
                 <div className="flex justify-between gap-4">
                     <input type="text" placeholder="search for topic or name" name="topic" value={topic} onChange={(e)=>{setTopic(e.target.value)}} 
                     className="border rounded w-full p-3 font-bold"></input>

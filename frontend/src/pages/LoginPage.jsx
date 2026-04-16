@@ -58,6 +58,7 @@ function LoginPage (){
                 <p className="text-center text-sm text-gray-500">
                     Don't have an account? <Link to="/register" className="text-blue-600">Sign up</Link>
                 </p>
+                <p><Link to="/" className="text-blue-500 mt-2 block text-center">← Back to Home</Link></p>
             </div>
         </div>
     )

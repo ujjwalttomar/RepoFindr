@@ -37,8 +37,8 @@ function Navbar (){
             :
                ( 
                 <>
-                    <Link to="/login" className="font-bold  text-xl">Login</Link>
-                    <Link to="/register" className="font-bold  text-xl">Register</Link>
+                    <Link to="/login" className="font-bold  text-xl hover:text-blue-500">Login</Link>
+                    <Link to="/register" className="font-bold  text-xl hover:text-blue-500">Register</Link>
                     
                 </>
                 )
