@@ -20,14 +20,11 @@ function Navbar (){
                 <Link to="/trending" className="font-bold text-xl hover:text-blue-500">Trending</Link>
             </div>
 
-            <div className="flex justify-between items-center gap-6">
+            <div className="flex justify-between items-center gap-2">
                    { (token)?
                ( 
                 <>
-                    <p class="text-gray-800">
-                            Welcome, 
-                            <span class="text-blue-600 font-semibold"> {user.username} !!</span>
-                    </p>
+                    <p className="text-gray-800">Welcome, <span className="text-blue-600 font-semibold"> {user.username} !!</span> </p>
                     <button onClick={logout} className="bg-blue-500 text-white px-4 py-2 rounded font-bold hover:bg-blue-600">
                         Logout
                     </button>

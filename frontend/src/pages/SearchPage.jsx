@@ -1,7 +1,7 @@
 //          RepoFindr/frontend/src/pages/SearchPage.jsx
 
 
-import react, {useState, useContext, useEffect} from "react";
+import react, {useState, useContext, useEffect, useRef} from "react";
 import RepoCard from "../components/RepoCard.jsx";
 import {AuthContext} from "../context/AuthContext.jsx";
 
@@ -18,6 +18,10 @@ function SearchPage (){
     const [savedIds, setSavedIds] = useState([]);
     const [searched, setSearched] = useState(false);
     const [error ,setError] = useState("");
+    const [page , setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
+    const bottomRef = useRef();
+    const [message, setMessage] = useState("");
     
     useEffect(()=>{
         async function fetchSaved(){
@@ -61,11 +65,78 @@ function SearchPage (){
         
     }
 
+
+    useEffect(()=>{
+
+        if(repos.length === 0) return;
+
+        async function loadMore (){
+            setError("");
+            setLoading(true);
+            setSearched(true);
+
+            const params = new URLSearchParams({topic, language, stars, forks, lastUpdated, page});
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/search-repo?${params}`,{
+                method : 'GET',
+                headers : {
+                    "content-type" : "application/json",
+                    "authorization" :  `Bearer ${token}`
+                }
+            })
+            const data = await response.json();
+            if(response.ok){
+                console.log(data);
+                setRepos((prev) => {
+                    const existingIds = new Set(prev.map(r => r.id))
+                    const newRepos = data.repositories.filter(r => !existingIds.has(r.id))
+                    return [...prev, ...newRepos]
+                })
+            }else{
+                setError(data.message);
+                console.log("repo fetching failed for next page : ", data.message);
+            }
+            setLoading(false);
+            setPage((page)=> page + 1);
+
+            const total = data.total;
+            console.log(total);
+            if(page >= Math.ceil(total/30)){
+                setHasMore(false);
+            }else{
+                setHasMore(true);
+            }
+        }
+
+        const observer = new IntersectionObserver((entries)=>{
+
+            if(entries[0].isIntersecting && !loading){
+                if(hasMore ){
+                    loadMore();
+                }else{
+                    setMessage("This is the last page !!!")
+                }
+            }
+        })
+
+        if(bottomRef.current){
+            observer.observe(bottomRef.current);
+        }
+    
+        return () => {
+            observer.disconnect();
+        };
+
+    },[page, hasMore, repos.length])
+
+
+
     async function handleSearch(){
         setError("");
         setLoading(true);
         setSearched(true);
-        const params= new URLSearchParams({topic, language, stars, forks, lastUpdated});
+        setMessage("");
+        const params= new URLSearchParams({topic, language, stars, forks, lastUpdated, page: 1});
+        setPage(1);
         const response = await fetch(`${import.meta.env.VITE_API_URL}/search-repo?${params}`, {
             method : 'GET',
             headers : {
@@ -75,6 +146,14 @@ function SearchPage (){
         })
 
         const data = await response.json();
+        
+        const total = data.total;
+        if(page >= Math.ceil(total/30)){
+            setHasMore(false);
+        }else{
+            setHasMore(true);
+        }
+
         if(response.ok){
             console.log(data);
             setRepos(data.repositories);
@@ -124,16 +203,20 @@ function SearchPage (){
 
         <div className="max-w-6xl mx-auto  w-full">
                 {loading ? "Loading...." : ((repos.length!==0) ? (repos.map((repo) => (
-                    <div key={repo.id} className="w-full">
-                        <RepoCard 
-                            repo={repo}
-                            isSaved={savedIds.includes(repo.id.toString())}
-                            onSave={addToSaved}
-                            onUnsave={removeFromSaved}
-                        />
-                    </div>
-                    )))
-                    :(!searched ? "":<p className="font-bold">no match found !!!, try changing filters or topic</p>) )}
+                            <div key={repo.id} className="w-full">
+                                <RepoCard 
+                                    repo={repo}
+                                    isSaved={savedIds.includes(repo.id.toString())}
+                                    onSave={addToSaved}
+                                    onUnsave={removeFromSaved}
+                                />
+                            </div>
+                        )
+                        ))
+                        :(!searched ? "":<p className="font-bold">no match found !!!, try changing filters or topic</p>) 
+                    )
+                }
+                <div className="text-black font-bold text-center" ref={bottomRef}>{!loading ? message: ""}</div>
         </div>       
     </>
     )
