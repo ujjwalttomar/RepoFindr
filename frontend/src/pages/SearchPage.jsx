@@ -91,7 +91,7 @@ function SearchPage (){
                 setRepos((prev) => {
                     const existingIds = new Set(prev.map(r => r.id))
                     const newRepos = data.repositories.filter(r => !existingIds.has(r.id))
-                    return [...prev, ...newRepos]
+                    return [...prev, ...newRepos];
                 })
             }else{
                 setError(data.message);
@@ -216,6 +216,7 @@ function SearchPage (){
             )) : (!searched ? "" : <p className="font-bold">no match found!!!</p>)}
             
             {loading && <p className="text-center py-4">Loading....</p>}
+            
             <div className="text-black font-bold text-center" ref={bottomRef}>{!loading ? message : ""}</div>
         </div>      
     </>

@@ -97,6 +97,7 @@ export const fetchAllSavedRepos = async (req, res) => {
 export const fetchTrendingRepos = async (req, res) => {
 
     try{
+        const page = req.query.page;
         const date = new Date();
         date.setDate(date.getDate()-7);
         const dateString = date.toISOString().split('T')[0];
@@ -109,7 +110,8 @@ export const fetchTrendingRepos = async (req, res) => {
             params : {
                 q : query,
                 sort : "stars",
-                order : "desc"
+                order : "desc",
+                page : page
         }
             
         })
