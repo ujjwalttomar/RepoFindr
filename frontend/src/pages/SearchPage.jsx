@@ -44,7 +44,9 @@ function SearchPage (){
             const savedStars = sessionStorage.getItem("stars");
             const savedLastUpdated = sessionStorage.getItem("lastUpdated");
 
-            if(savedRepos) setRepos(JSON.parse(savedRepos));
+            if(savedRepos){
+                setHasMore(true);
+                setRepos(JSON.parse(savedRepos));}
             if(savedTopic) setTopic(JSON.parse(savedTopic));
             if(savedLanguage) setLanguage(JSON.parse(savedLanguage));
             if(savedForks) setForks(JSON.parse(savedForks));
@@ -178,8 +180,8 @@ function SearchPage (){
     <>
         <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow shadow-blue-700 rounded-md">
                 <div className="flex justify-between gap-4">
-                    <input type="text" placeholder="search for topic or name" name="topic" value={topic} onChange={(e)=>{setTopic(e.target.value)}} 
-                    className="border rounded w-full p-3 font-bold"></input>
+                    <input type="text" placeholder="search for topic or name" onKeyDown={(e) => { if(e.key === "Enter") handleSearch() }} name="topic" 
+                    value={topic} onChange={(e)=>{setTopic(e.target.value)}} className="border rounded w-full p-3 font-bold"></input>
                     <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded">Search</button>
                 </div>
             
@@ -201,23 +203,21 @@ function SearchPage (){
         
         { error && <p className="text-red-500 font-bold max-w-6xl mx-auto  w-full py-10"> Error : {error}</p> }
 
-        <div className="max-w-6xl mx-auto  w-full">
-                {loading ? "Loading...." : ((repos.length!==0) ? (repos.map((repo) => (
-                            <div key={repo.id} className="w-full">
-                                <RepoCard 
-                                    repo={repo}
-                                    isSaved={savedIds.includes(repo.id.toString())}
-                                    onSave={addToSaved}
-                                    onUnsave={removeFromSaved}
-                                />
-                            </div>
-                        )
-                        ))
-                        :(!searched ? "":<p className="font-bold">no match found !!!, try changing filters or topic</p>) 
-                    )
-                }
-                <div className="text-black font-bold text-center" ref={bottomRef}>{!loading ? message: ""}</div>
-        </div>       
+        <div className="max-w-6xl mx-auto w-full">
+            {repos.length !== 0 ? repos.map((repo) => (
+                <div key={repo.id} className="w-full">
+                    <RepoCard 
+                        repo={repo}
+                        isSaved={savedIds.includes(repo.id.toString())}
+                        onSave={addToSaved}
+                        onUnsave={removeFromSaved}
+                    />
+                </div>
+            )) : (!searched ? "" : <p className="font-bold">no match found!!!</p>)}
+            
+            {loading && <p className="text-center py-4">Loading....</p>}
+            <div className="text-black font-bold text-center" ref={bottomRef}>{!loading ? message : ""}</div>
+        </div>      
     </>
     )
 }

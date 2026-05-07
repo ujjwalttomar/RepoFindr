@@ -14,7 +14,7 @@ function App(){
     return(
        <>
         {!hidebar && <Navbar/>}
-       
+        <p className="text-center text-gray-500 mt-6 text-lg">Search and save GitHub repositories</p>
         <Routes>
             <Route path="/"  element={<SearchPage/>}/>
             <Route path="/saved"  element={
