@@ -178,23 +178,23 @@ function SearchPage (){
 
     return (
     <>
-        <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow shadow-blue-700 rounded-md">
+        <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow-md shadow-blue-700 rounded-md">
                 <div className="flex justify-between gap-4">
                     <input type="text" placeholder="search for topic or name" onKeyDown={(e) => { if(e.key === "Enter") handleSearch() }} name="topic" 
-                    value={topic} onChange={(e)=>{setTopic(e.target.value)}} className="border rounded w-full p-3 font-bold"></input>
-                    <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded">Search</button>
+                    value={topic} onChange={(e)=>{setTopic(e.target.value)}} className="border  rounded w-full p-3 font-bold"></input>
+                    <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded hover:bg-blue-700">Search</button>
                 </div>
             
                 <div className="flex flex-col gap-3">
                     <div className="flex gap-4">
                         <input type="text" name="language" placeholder="language" value={language} onChange={(e)=>{setLanguage(e.target.value)}} 
-                            className="font-bold border rounded p-2 w-full"/>
+                            className="font-bold border  rounded p-2 w-full"/>
                         <input type="date" name="lastUpdated" value={lastUpdated} onChange={(e)=>{setLastUpdated(e.target.value)}} 
-                            className="font-bold border rounded p-2 w-full"/>
+                            className="font-bold  border  rounded p-2 w-full"/>
                     </div>
                     <div className="flex gap-4">
                         <input type="number" name="stars" placeholder="min stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}
-                            className="font-bold border rounded p-2 w-full"/>
+                            className="font-bold border  rounded p-2 w-full"/>
                         <input type="number" name="forks" placeholder="min forks" value={forks} onChange={(e)=>{setForks(e.target.value)}}
                             className="font-bold border rounded p-2 w-full"/>
                     </div>

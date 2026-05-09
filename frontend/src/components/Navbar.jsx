@@ -10,17 +10,17 @@ function Navbar (){
     const {token , logout, user} = useContext(AuthContext);
 
     return(
-        <div className="flex items-center justify-between p-5 shadow shadow-gray-300 px-60 py-5 bg-white">
+        <div className="flex sticky top-0  items-center justify-between p-5 shadow shadow-gray-300 px-53 py-5 bg-white">
 
             <div> <h1 className="text-3xl font-bold text-blue-600 "> RepoFindr</h1></div>
 
-            <div className="flex justify-between  gap-6">
+            <div className="flex justify-between  gap-12">
                 <Link to="/" className="font-bold  text-xl hover:text-blue-500">Home</Link>
                 <Link to="/saved" className="font-bold text-xl hover:text-blue-500">Saved</Link>
                 <Link to="/trending" className="font-bold text-xl hover:text-blue-500">Trending</Link>
             </div>
 
-            <div className="flex justify-between items-center gap-2">
+            <div className="flex justify-between items-center gap-7">
                    { (token)?
                ( 
                 <>

@@ -67,7 +67,7 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
     }
 
     return (
-        <div className="flex flex-col rounded justify-center w-full  mb-10 shadow shadow-gray-500 p-5 gap-2 mt-5">
+        <div className="flex flex-col rounded justify-center w-full  mb-10 shadow shadow-gray-500 p-5 gap-2 mt-5 hover:bg-blue-50">
             <div className="flex justify-between ">
                 <div className="flex gap-4 justify-center items-center">
                     <img src={repo.owner.avatar} className="w-10 h-10 rounded"></img>
@@ -80,13 +80,13 @@ function RepoCard ({repo, onSave, onUnsave, isSaved}) {
                 }
             </div>
 
-            <h1><a href={repo.url} target="_blank" className="font-extrabold text-blue-700 text-xl">{repo.repoName}</a></h1>
+            <h1><a href={repo.url} target="_blank" className="font-extrabold text-blue-700 text-xl hover:text-blue-300">{repo.repoName}</a></h1>
 
             <p className=" text-gray-600 font-bold ">{repo.description}</p>
 
             <div className=" flex gap-4">
-                <span className="font-semibold text-gray-800">Forks: {repo.forks}</span>
-                <span className="font-semibold text-gray-800">Stars: {repo.stars}</span>
+                <span className="font-semibold text-gray-800">⎇ : {repo.forks}</span>
+                <span className="font-semibold text-gray-800">⭐ : {repo.stars}</span>
                 <span className="font-semibold text-gray-800">Language: {repo.language}</span>
                 
             </div >
