@@ -21,7 +21,9 @@ function SearchPage (){
     const [page , setPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
     const bottomRef = useRef();
+    const totalRepoCount = useRef();
     const [message, setMessage] = useState("");
+
     
     useEffect(()=>{
         async function fetchSaved(){
@@ -100,9 +102,9 @@ function SearchPage (){
             setLoading(false);
             setPage((page)=> page + 1);
 
-            const total = data.total;
-            console.log(total);
-            if(page >= Math.ceil(total/30)){
+            totalRepoCount.current = data.total;
+            console.log(totalRepoCount.current);
+            if(page >= Math.ceil(totalRepoCount.current/30)){
                 setHasMore(false);
             }else{
                 setHasMore(true);
@@ -149,8 +151,8 @@ function SearchPage (){
 
         const data = await response.json();
         
-        const total = data.total;
-        if(page >= Math.ceil(total/30)){
+        totalRepoCount.current = data.total;
+        if(page >= Math.ceil(totalRepoCount.current/30)){
             setHasMore(false);
         }else{
             setHasMore(true);
@@ -176,52 +178,56 @@ function SearchPage (){
         setLoading(false);
     }
 
-    return (
-    <>
-        <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow-md shadow-blue-700 rounded-md">
-                <div className="flex justify-between gap-4">
-                    <input type="text" placeholder="search for topic or name" onKeyDown={(e) => { if(e.key === "Enter") handleSearch() }} name="topic" 
-                    value={topic} onChange={(e)=>{setTopic(e.target.value)}} className="border  rounded w-full p-3 font-bold"></input>
-                    <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded hover:bg-blue-700">Search</button>
-                </div>
-            
-                <div className="flex flex-col gap-3">
-                    <div className="flex gap-4">
-                        <input type="text" name="language" placeholder="language" value={language} onChange={(e)=>{setLanguage(e.target.value)}} 
-                            className="font-bold border  rounded p-2 w-full"/>
-                        <input type="date" name="lastUpdated" value={lastUpdated} onChange={(e)=>{setLastUpdated(e.target.value)}} 
-                            className="font-bold  border  rounded p-2 w-full"/>
-                    </div>
-                    <div className="flex gap-4">
-                        <input type="number" name="stars" placeholder="min stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}
-                            className="font-bold border  rounded p-2 w-full"/>
-                        <input type="number" name="forks" placeholder="min forks" value={forks} onChange={(e)=>{setForks(e.target.value)}}
-                            className="font-bold border rounded p-2 w-full"/>
-                    </div>
-                </div>
-        </div>
+  return (
+<>
+    <div className="flex flex-col max-w-6xl mx-auto px-8 mb-20 mt-12 gap-6 p-6 shadow-md shadow-blue-700 rounded-md">
+            <div className="flex justify-between gap-4">
+                <input type="text" placeholder="search for topic or name" onKeyDown={(e) => { if(e.key === "Enter") handleSearch() }} name="topic" 
+                value={topic} onChange={(e)=>{setTopic(e.target.value)}} className="border rounded w-full p-3 font-bold"></input>
+                <button onClick={handleSearch} className="text-white font-bold px-4 py-2 bg-blue-500 rounded hover:bg-blue-700">Search</button>
+            </div>
         
-        { error && <p className="text-red-500 font-bold max-w-6xl mx-auto  w-full py-10"> Error : {error}</p> }
-
-        <div className="max-w-6xl mx-auto w-full">
-            {repos.length !== 0 ? repos.map((repo) => (
-                <div key={repo.id} className="w-full">
-                    <RepoCard 
-                        repo={repo}
-                        isSaved={savedIds.includes(repo.id.toString())}
-                        onSave={addToSaved}
-                        onUnsave={removeFromSaved}
-                    />
+            <div className="flex flex-col gap-3">
+                <div className="flex gap-4">
+                    <input type="text" name="language" placeholder="language" value={language} onChange={(e)=>{setLanguage(e.target.value)}} 
+                        className="font-bold border rounded p-2 w-full"/>
+                    <input type="date" name="lastUpdated" value={lastUpdated} onChange={(e)=>{setLastUpdated(e.target.value)}} 
+                        className="font-bold border rounded p-2 w-full"/>
                 </div>
-            )) : (!searched ? "" : <p className="font-bold">no match found!!!</p>)}
-            
-            {loading && <p className="text-center py-4">Loading....</p>}
-            
-            <div className="text-black font-bold text-center" ref={bottomRef}>{!loading ? message : ""}</div>
-        </div>      
-    </>
-    )
+                <div className="flex gap-4">
+                    <input type="number" name="stars" placeholder="min stars" value={stars} onChange={(e)=>{setStars(e.target.value)}}
+                        className="font-bold border rounded p-2 w-full"/>
+                    <input type="number" name="forks" placeholder="min forks" value={forks} onChange={(e)=>{setForks(e.target.value)}}
+                        className="font-bold border rounded p-2 w-full"/>
+                </div>
+            </div>
+    </div>
+
+    {(!loading && searched) && 
+        <div className="flex flex-row justify-between max-w-6xl mx-auto w-full">
+            <h1 className="font-bold">Search Results</h1>
+            <p>{totalRepoCount.current} repositories found</p>
+        </div>}
+
+    {error && <p className="text-red-500 font-bold max-w-6xl mx-auto w-full py-10">Error: {error}</p>}
+
+    <div className="max-w-6xl mx-auto w-full">
+        {repos.length !== 0 ? repos.map((repo) => (
+            <div key={repo.id} className="w-full">
+                <RepoCard 
+                    repo={repo}
+                    isSaved={savedIds.includes(repo.id.toString())}
+                    onSave={addToSaved}
+                    onUnsave={removeFromSaved}
+                />
+            </div>
+        )) : (searched && !loading && <p className="font-bold">no match found!!!</p>)}
+        
+        {loading && <p className="text-center py-4">Loading....</p>}
+        <div className="text-black font-bold text-center" ref={bottomRef}>{!loading ? message : ""}</div>
+    </div>      
+</>
+)
 }
 
 export default SearchPage;
-
