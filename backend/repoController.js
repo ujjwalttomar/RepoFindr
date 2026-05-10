@@ -10,7 +10,7 @@ export const searchRepos = async (req, res) => {
 
     try{
         // take the input form user, the queries , the order , the number of stars , forks , language etc.
-        const {topic, language, stars, forks, lastUpdated, page} = req.query;
+        const {topic, language, stars, forks, lastUpdated, page, sort, order} = req.query;
 
         let query = ""
 
@@ -27,7 +27,7 @@ export const searchRepos = async (req, res) => {
 
 
         const response =  await axios.get(`https://api.github.com/search/repositories`, {
-            params : {q : query, page : page || 1, per_page : 30}
+            params : {q : query, page : page || 1, per_page : 30, sort : sort, order : order}
         }); 
         
         const repos = response.data.items;

@@ -23,6 +23,8 @@ function SearchPage (){
     const bottomRef = useRef();
     const totalRepoCount = useRef();
     const [message, setMessage] = useState("");
+    const [sort, setSort] = useState("stars");
+    const [order , setOrder] = useState("desc");
 
     
     useEffect(()=>{
@@ -79,7 +81,7 @@ function SearchPage (){
             setLoading(true);
             setSearched(true);
 
-            const params = new URLSearchParams({topic, language, stars, forks, lastUpdated, page});
+            const params = new URLSearchParams({topic, language, stars, forks, lastUpdated, page, sort, order});
             const response = await fetch(`${import.meta.env.VITE_API_URL}/search-repo?${params}`,{
                 method : 'GET',
                 headers : {
@@ -130,16 +132,19 @@ function SearchPage (){
             observer.disconnect();
         };
 
-    },[page, hasMore, repos.length])
+    },[page, hasMore, repos.length, sort, order])
 
-
+    useEffect(()=>{
+        if(!searched)return;
+        handleSearch();
+    },[order, sort])
 
     async function handleSearch(){
         setError("");
         setLoading(true);
         setSearched(true);
         setMessage("");
-        const params= new URLSearchParams({topic, language, stars, forks, lastUpdated, page: 1});
+        const params= new URLSearchParams({topic, language, stars, forks, lastUpdated, page: 1, sort, order});
         setPage(1);
         const response = await fetch(`${import.meta.env.VITE_API_URL}/search-repo?${params}`, {
             method : 'GET',
@@ -203,13 +208,34 @@ function SearchPage (){
             </div>
     </div>
 
-    {(!loading && searched) && 
-        <div className="flex flex-row justify-between max-w-6xl mx-auto w-full">
-            <h1 className="font-bold">Search Results</h1>
-            <p>{totalRepoCount.current} repositories found</p>
-        </div>}
+    {(!loading ) && 
+        <div>
+            <div className="flex flex-row justify-between max-w-6xl mx-auto w-full">
+                <h1 className="font-bold">Search Results</h1>
+                <p>{totalRepoCount.current} repositories found</p>
+            </div>
+            <div className="flex flex-row justify-end max-w-6xl m-auto w-full py-5 gap-5">
+                <div className="flex flex-row justify-center items-center">
+                    <p className="font-bold">Sort By :</p>
+                    <select value={sort} onChange={(e)=> setSort(e.target.value)}>
+                        <option value="stars">stars</option>
+                        <option value="forks">forks</option>
+                        <option value="updated">updated</option>
+                        <option value="pushed">pushed</option>                        
+                    </select>
+                </div>
+                <div className="flex flex-row justify-center items-center">
+                    <p className="font-bold">Order By :</p>
+                    <select value={order} onChange={(e)=> setOrder(e.target.value)}>
+                        <option value="asc">asc</option>
+                        <option value="desc">desc</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    }
 
-    {error && <p className="text-red-500 font-bold max-w-6xl mx-auto w-full py-10">Error: {error}</p>}
+    {error && <p className="text-red-500 font-bold max-w-6xl mx-auto w-full ">Error: {error}</p>}
 
     <div className="max-w-6xl mx-auto w-full">
         {repos.length !== 0 ? repos.map((repo) => (
